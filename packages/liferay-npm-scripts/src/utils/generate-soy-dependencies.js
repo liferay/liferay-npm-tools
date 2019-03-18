@@ -29,5 +29,5 @@ module.exports = function(dependencies) {
 		.filter(dependencyPath => dependencyPath !== cwd)
 		.join(',');
 
-	return `{${stringDependencies}}/src/**/*.soy`;
+	return `{${stringDependencies}}/{src,META-INF}/**/*.soy`;
 };
