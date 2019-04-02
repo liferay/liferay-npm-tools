@@ -31,11 +31,24 @@ function combineMerge(target, source, options) {
 }
 
 /**
+ * Code copied from https://github.com/TehShrike/deepmerge#combine-array
+ */
+const overwriteMerge = (destinationArray, sourceArray) => sourceArray;
+
+/**
  * Helper to get merge two json objects
  * @param {Object} defaultConfig Config file
  * @param {Object} customConfig Config file
  * @returns {Object}
  */
-module.exports = function() {
-	return merge.all([...arguments], {arrayMerge: combineMerge});
+exports.deepMerge = function() {
+	return merge.all([...arguments], {
+		arrayMerge: combineMerge
+	});
+};
+
+exports.deepMergeOverWrite = function() {
+	return merge.all([...arguments], {
+		arrayMerge: overwriteMerge
+	});
 };

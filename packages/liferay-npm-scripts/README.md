@@ -77,6 +77,38 @@ Eject will remove `liferay-npm-scripts` as a dependency and write all of the nec
 
 If you need to add additional configuration you can do so by creating a `.liferaynpmscriptsrc` file at the root of your project. The default configuration of this file can be seen [here](./src/config/liferay-npm-scripts.json).
 
+#### Overriding default arrays
+
+In the rare case you want to override default config such as the default dependency list or lint/format globs, we provide an escape hatch via `.liferaynpmscriptsrc-override`. By using this file, you are able to override a configuration rather than merging with the default values. See examples below for more info.
+
+The example below would result in _only_ `foo-bar` being passed as a soy dependency.
+
+```json
+{
+	"build": {
+		"dependencies": ["foo-bar"]
+	}
+}
+```
+
+The example below would result in _only_ jsx files being linted, instead of adding `**/*.jsx` to the pre-existing [defaults](./src/config/liferay-npm-scripts.json#L14-L20).
+
+```json
+{
+	"lint": ["**/*.jsx"]
+}
+```
+
+The example below would result in passing no globs to the lint task and override the [default globs](./src/config/liferay-npm-scripts.json#L14-L20).
+
+```json
+{
+	"lint": []
+}
+```
+
+_Using `.liferaynpmscriptsrc-override` is not recommended and will likely be removed in the next major version change._
+
 ### Other Config
 
 If you need more flexibility over babel or the bundler. You can still add a `.babelrc` or `.npmbundlerrc` which will be merged with the default settings this tool provides. [Default Babel Config](./src/config/babel.json), [Default Bundler Config](./src/config/npm-bundler.json)

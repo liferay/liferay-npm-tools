@@ -6,7 +6,7 @@
 
 const sortKeys = require('sort-keys');
 const getUserConfig = require('./get-user-config');
-const deepMerge = require('./deep-merge');
+const {deepMerge, deepMergeOverWrite} = require('./deep-merge');
 
 /**
  * Helper to get JSON configs
@@ -40,12 +40,15 @@ module.exports = function(type) {
 
 		case 'npmscripts':
 			return sortKeys(
-				deepMerge(
-					require('../config/liferay-npm-scripts'),
-					require('../config/liferay-npm-scripts-build-deps-clay.json'),
-					require('../config/liferay-npm-scripts-build-deps-liferay.json'),
-					require('../config/liferay-npm-scripts-build-deps-metal.json'),
-					getUserConfig('.liferaynpmscriptsrc')
+				deepMergeOverWrite(
+					deepMerge(
+						require('../config/liferay-npm-scripts'),
+						require('../config/liferay-npm-scripts-build-deps-clay.json'),
+						require('../config/liferay-npm-scripts-build-deps-liferay.json'),
+						require('../config/liferay-npm-scripts-build-deps-metal.json'),
+						getUserConfig('.liferaynpmscriptsrc')
+					),
+					getUserConfig('.liferaynpmscriptsrc-override')
 				)
 			);
 
