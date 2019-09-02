@@ -6,7 +6,10 @@ var MAP_WHITESPACE = {
 	'\xa0': ' '
 };
 
-var REGEX_WHITESPACE_CHARS = new RegExp(`(${Object.keys(MAP_WHITESPACE).join('|')})`, 'g');
+var REGEX_WHITESPACE_CHARS = new RegExp(
+	`(${Object.keys(MAP_WHITESPACE).join('|')})`,
+	'g'
+);
 
 module.exports = {
 	extraneousSpaces: {
@@ -32,7 +35,9 @@ module.exports = {
 			rawContent = rawContent.replace(
 				/(.*)( +\t|\t +)(.*)/g,
 				(str, prefix, problem, suffix) => {
-					problem = problem.replace(/ {4}| {2}/g, '\t').replace(/ /g, '');
+					problem = problem
+						.replace(/ {4}| {2}/g, '\t')
+						.replace(/ /g, '');
 
 					return prefix + problem + suffix;
 				}

@@ -7,7 +7,7 @@ var RuleTester = lint.eslint.RuleTester;
 
 var ruleTester = new RuleTester();
 
-var options = [{'jsp': true}];
+var options = [{jsp: true}];
 
 ruleTester.run(
 	path.basename(__filename, '.js'),
@@ -26,13 +26,15 @@ ruleTester.run(
 			{
 				code: '(function(){ function _SCRIPTLET_xyz(){} })',
 				options: options
-			},
+			}
 		],
 
 		invalid: [
 			{
 				code: '(function(){ var _PN_xyz = 1; });',
-				errors: [ { message: "'_PN_xyz' is assigned a value but never used." } ],
+				errors: [
+					{message: "'_PN_xyz' is assigned a value but never used."}
+				],
 				options: options
 			},
 			{
@@ -41,7 +43,12 @@ ruleTester.run(
 				parserOptions: {
 					sourceType: 'module'
 				},
-				errors: [ { message: "'OSBForm_EL_EXPRESSION_13' is defined but never used." } ],
+				errors: [
+					{
+						message:
+							"'OSBForm_EL_EXPRESSION_13' is defined but never used."
+					}
+				]
 			}
 		]
 	}

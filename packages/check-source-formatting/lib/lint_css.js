@@ -28,17 +28,15 @@ var runLinter = (contents, file, context) => {
 
 	config = _.merge(...configs);
 
-	return stylelint.lint(
-		{
-			code: contents,
-			codeFileName: file,
-			config,
-			configBasedir: rootDir,
-			formatter: 'json',
-			fix: context.fix,
-			syntax: 'scss'
-		}
-	);
+	return stylelint.lint({
+		code: contents,
+		codeFileName: file,
+		config,
+		configBasedir: rootDir,
+		formatter: 'json',
+		fix: context.fix,
+		syntax: 'scss'
+	});
 };
 
 var globOptions = {
@@ -49,18 +47,13 @@ module.exports = (contents, file, context) => {
 	context.customRules = customRules;
 	var plugins = STYLELINT_CONFIG.plugins;
 
-	glob.sync(
-		'./lint_css_rules/*.js',
-		globOptions
-	).forEach(
-		(item, index) => {
-			var id = ruleUtils.getRuleId(item);
+	glob.sync('./lint_css_rules/*.js', globOptions).forEach((item, index) => {
+		var id = ruleUtils.getRuleId(item);
 
-			customRules[id] = require(item);
+		customRules[id] = require(item);
 
-			plugins.push(path.resolve(rootDir, './lib', item));
-		}
-	);
+		plugins.push(path.resolve(rootDir, './lib', item));
+	});
 
 	return runLinter(contents, file, context);
 };

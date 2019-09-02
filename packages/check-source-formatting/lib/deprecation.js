@@ -2,7 +2,10 @@ var _ = require('lodash');
 var colors = require('cli-color-keywords')();
 var path = require('path');
 
-var unindent = (strings, ...keys) => _.zipWith(strings, keys, _.add).join('').replace(/^\s+/gm, '  ');
+var unindent = (strings, ...keys) =>
+	_.zipWith(strings, keys, _.add)
+		.join('')
+		.replace(/^\s+/gm, '  ');
 
 function deprecationCheck(params) {
 	var config = params.config;
@@ -14,10 +17,17 @@ function deprecationCheck(params) {
 
 	var retVal = '';
 
-	if (path.basename(scriptName) === 'check_sf' && (Date.now() - lastDeprecationCheck >= checkInterval)) {
-		var header = `Using the ${colors.inverse('check_sf')} form of this module is deprecated.`;
+	if (
+		path.basename(scriptName) === 'check_sf' &&
+		Date.now() - lastDeprecationCheck >= checkInterval
+	) {
+		var header = `Using the ${colors.inverse(
+			'check_sf'
+		)} form of this module is deprecated.`;
 
-		var footer = `Please use the ${colors.inverse('csf')} command instead. It's easier to type too!`;
+		var footer = `Please use the ${colors.inverse(
+			'csf'
+		)} command instead. It's easier to type too!`;
 
 		var maxLineLength = Math.max(header.length, footer.length);
 

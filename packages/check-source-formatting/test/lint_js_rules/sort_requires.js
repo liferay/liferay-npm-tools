@@ -23,11 +23,11 @@ ruleTester.run(
 		invalid: [
 			{
 				code: '({requires: ["b", "a"]})',
-				errors: [ { message: 'Sort modules in "requires" array: b > a' } ]
+				errors: [{message: 'Sort modules in "requires" array: b > a'}]
 			},
 			{
 				code: '({requires: ["b", "c", "a"]})',
-				errors: [ { message: 'Sort modules in "requires" array: c > a' } ]
+				errors: [{message: 'Sort modules in "requires" array: c > a'}]
 			}
 		]
 	}

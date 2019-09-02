@@ -13,39 +13,36 @@ ruleTester.run(
 	path.basename(__filename, '.js'),
 	require('../../lib/lint_js_rules/' + path.basename(__filename)),
 	{
-		valid: [
-			'[1, 2, 3]',
-			'[1,\n2]'
-		],
+		valid: ['[1, 2, 3]', '[1,\n2]'],
 
 		invalid: [
 			{
 				code: '[1,2,3]',
-				errors: [ { message: STR_ERROR + '[1,2,3' } ]
+				errors: [{message: STR_ERROR + '[1,2,3'}]
 			},
 			{
 				code: '[1,  2, 3]',
-				errors: [ { message: STR_ERROR + '[1,  2' } ]
+				errors: [{message: STR_ERROR + '[1,  2'}]
 			},
 			{
 				code: '["1",  "2", "3"]',
-				errors: [ { message: STR_ERROR + '["1",  "' } ]
+				errors: [{message: STR_ERROR + '["1",  "'}]
 			},
 			{
-				code: '[\'1\',  \'2\', \'3\']',
-				errors: [ { message: STR_ERROR + '[\'1\',  \'' } ]
+				code: "['1',  '2', '3']",
+				errors: [{message: STR_ERROR + "['1',  '"}]
 			},
 			{
 				code: '[1,	2, 3]',
-				errors: [ { message: STR_ERROR + '[1,\\t' } ]
+				errors: [{message: STR_ERROR + '[1,\\t'}]
 			},
 			{
 				code: '["1",	"2", "3"]',
-				errors: [ { message: STR_ERROR + '["1",\\t' } ]
+				errors: [{message: STR_ERROR + '["1",\\t'}]
 			},
 			{
-				code: '[\'1\',	\'2\', \'3\']',
-				errors: [ { message: STR_ERROR + '[\'1\',\\t' } ]
+				code: "['1',	'2', '3']",
+				errors: [{message: STR_ERROR + "['1',\\t"}]
 			}
 		]
 	}

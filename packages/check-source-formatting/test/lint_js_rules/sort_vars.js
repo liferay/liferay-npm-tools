@@ -7,12 +7,10 @@ var RuleTester = lint.eslint.RuleTester;
 
 var ruleTester = new RuleTester();
 
-var addES6 = require('../test_utils').addES6(
-	{
-		ecmaFeatures: {},
-		sourceType: 'module'
-	}
-);
+var addES6 = require('../test_utils').addES6({
+	ecmaFeatures: {},
+	sourceType: 'module'
+});
 
 ruleTester.run(
 	path.basename(__filename, '.js'),
@@ -29,12 +27,14 @@ ruleTester.run(
 			'for (var i in obj) {\nvar current = 1;\n}'
 		].concat(
 			[
-				{ code: 'const {bar, foo} = refs;' },
-				{ code: 'import Foo, {bar, baz} from "somefile";' },
-				{ code: 'import Foo, {bar as doo, baz} from "somefile";' },
-				{ code: 'import Foo from "somefile";' },
-				{ code: 'import "somefile";' },
-				{ code: 'const [foo, bar] = refs;' }/*,
+				{code: 'const {bar, foo} = refs;'},
+				{code: 'import Foo, {bar, baz} from "somefile";'},
+				{code: 'import Foo, {bar as doo, baz} from "somefile";'},
+				{code: 'import Foo from "somefile";'},
+				{code: 'import "somefile";'},
+				{
+					code: 'const [foo, bar] = refs;'
+				} /*,
 				Need to add the below as soon as I figure out what to do about es7/babel-eslint, etc
 				{ code: 'const {foo, ...bar} = refs;' }*/
 			].map(addES6)
@@ -43,41 +43,58 @@ ruleTester.run(
 		invalid: [
 			{
 				code: 'var def = 456;\nvar abc = 123;',
-				errors: [ { message: 'Sort variables: def abc' } ]
+				errors: [{message: 'Sort variables: def abc'}]
 			},
 			{
 				code: 'var def = 456;\n\nvar def_xyz = "FOO";\nvar abc = 123;',
-				errors: [ { message: 'Sort variables: def_xyz abc' } ]
+				errors: [{message: 'Sort variables: def_xyz abc'}]
 			},
 			{
-				code: 'var def = 456;\n\nvar def_xyz = foo();\nvar abc = def_xyz.bar();',
-				errors: [ { message: 'Sort variables: def_xyz abc. If you\'re using "def_xyz" in assigning a value to "abc", add a newline between them.' } ]
+				code:
+					'var def = 456;\n\nvar def_xyz = foo();\nvar abc = def_xyz.bar();',
+				errors: [
+					{
+						message:
+							'Sort variables: def_xyz abc. If you\'re using "def_xyz" in assigning a value to "abc", add a newline between them.'
+					}
+				]
 			},
 			{
-				code: 'var def = 456;\n\nvar def_xyz = window.foo;\nvar abc = def_xyz.bar;',
-				errors: [ { message: 'Sort variables: def_xyz abc. If you\'re using "def_xyz" in assigning a value to "abc", add a newline between them.' } ]
+				code:
+					'var def = 456;\n\nvar def_xyz = window.foo;\nvar abc = def_xyz.bar;',
+				errors: [
+					{
+						message:
+							'Sort variables: def_xyz abc. If you\'re using "def_xyz" in assigning a value to "abc", add a newline between them.'
+					}
+				]
 			},
 			{
 				code: 'var def = 456;\nvar abc = def++;',
-				errors: [ { message: 'Sort variables: def abc. If you\'re using "def" in assigning a value to "abc", add a newline between them.' } ]
+				errors: [
+					{
+						message:
+							'Sort variables: def abc. If you\'re using "def" in assigning a value to "abc", add a newline between them.'
+					}
+				]
 			},
 			{
 				code: 'var def = 456;\n\nvar def_xyz =[];\nvar abc = [];',
-				errors: [ { message: 'Sort variables: def_xyz abc' } ]
+				errors: [{message: 'Sort variables: def_xyz abc'}]
 			},
 			{
 				code: 'var def = 456;\n\nvar def_xyz ={};\nvar abc = {};',
-				errors: [ { message: 'Sort variables: def_xyz abc' } ]
+				errors: [{message: 'Sort variables: def_xyz abc'}]
 			}
 		].concat(
 			[
 				{
 					code: 'const {foo, bar} = refs',
-					errors: [ { message: 'Sort variables: foo bar' } ]
+					errors: [{message: 'Sort variables: foo bar'}]
 				},
 				{
 					code: 'import Foo, {baz, bar} from "somefile";',
-					errors: [ { message: 'Sort imported members: baz bar' } ]
+					errors: [{message: 'Sort imported members: baz bar'}]
 				}
 			].map(addES6)
 		)

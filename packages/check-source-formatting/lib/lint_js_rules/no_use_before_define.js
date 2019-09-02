@@ -22,17 +22,15 @@ module.exports = context => {
 			if (sameScope) {
 				var scope = mockContext.getScope();
 
-				scope.references.forEach(
-					reference => {
-						if (reference.identifier !== obj.node) {
-							return;
-						}
-
-						var variable = reference.resolved;
-
-						report = reference.from.variableScope === variable.scope;
+				scope.references.forEach(reference => {
+					if (reference.identifier !== obj.node) {
+						return;
 					}
-				);
+
+					var variable = reference.resolved;
+
+					report = reference.from.variableScope === variable.scope;
+				});
 			}
 
 			if (report) {
@@ -50,11 +48,9 @@ module.exports = context => {
 			'Program:exit': function(node) {
 				defaultRule['Program:exit'](node);
 
-				collectedReport.forEach(
-					(item, index) => {
-						context.report(item);
-					}
-				);
+				collectedReport.forEach((item, index) => {
+					context.report(item);
+				});
 			}
 		},
 		defaultRule

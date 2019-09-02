@@ -1,2 +1,1 @@
-exports.check = function(config) {
-};
+exports.check = function(config) {};

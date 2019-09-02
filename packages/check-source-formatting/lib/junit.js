@@ -34,44 +34,36 @@ class JUnitReporter {
 			stats: testStats
 		};
 
-		_.forEach(
-			fileErrors,
-			(fileErrors, fileName) => {
-				const errors = [];
+		_.forEach(fileErrors, (fileErrors, fileName) => {
+			const errors = [];
 
-				fileErrors = _.reject(
-					fileErrors,
-					{
-						type: 'ignored'
-					}
-				);
+			fileErrors = _.reject(fileErrors, {
+				type: 'ignored'
+			});
 
-				_.forEach(
-					_.groupBy(fileErrors, 'type'),
-					(violations, violationType) => {
-						errors.push(
-							{
-								failure: {
-									msg: violationType,
-									stack: violations
-								},
-								testName: violationType
-							}
-						);
-					}
-				);
+			_.forEach(
+				_.groupBy(fileErrors, 'type'),
+				(violations, violationType) => {
+					errors.push({
+						failure: {
+							msg: violationType,
+							stack: violations
+						},
+						testName: violationType
+					});
+				}
+			);
 
-				const fileResult = {
-					errors,
-					file: fileName,
-					stats: {
-						failures: fileErrors.length
-					}
-				};
+			const fileResult = {
+				errors,
+				file: fileName,
+				stats: {
+					failures: fileErrors.length
+				}
+			};
 
-				result.files.push(fileResult);
-			}
-		);
+			result.files.push(fileResult);
+		});
 
 		return result;
 	}
@@ -102,6 +94,10 @@ class JUnitReporter {
 	}
 }
 
-JUnitReporter.prototype.TPL_PATH = path.join(__dirname, 'tpl', 'junit_report.tpl');
+JUnitReporter.prototype.TPL_PATH = path.join(
+	__dirname,
+	'tpl',
+	'junit_report.tpl'
+);
 
 module.exports = JUnitReporter;

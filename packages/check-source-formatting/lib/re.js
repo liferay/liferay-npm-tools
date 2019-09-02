@@ -12,21 +12,21 @@ re.prototype.hasExtraNewLines = function(item, index, collection) {
 	if (item === '') {
 		var length = collection.length;
 
-		extraNewLines = (index === 0 && length > 1) || collection[index - 1] === '' || (index === length - 1 && length > 1);
+		extraNewLines =
+			(index === 0 && length > 1) ||
+			collection[index - 1] === '' ||
+			(index === length - 1 && length > 1);
 	}
 
 	if (extraNewLines) {
-		this.emit(
-			'message',
-			{
-				context: {
-					rawContent: item,
-					item,
-					lineNum: index + 1
-				},
-				message: 'Extra new line'
-			}
-		);
+		this.emit('message', {
+			context: {
+				rawContent: item,
+				item,
+				lineNum: index + 1
+			},
+			message: 'Extra new line'
+		});
 	}
 
 	return extraNewLines;

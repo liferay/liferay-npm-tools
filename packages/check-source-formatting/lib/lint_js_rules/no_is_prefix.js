@@ -7,8 +7,8 @@ module.exports = context => {
 		var value = node.value;
 		var valueType = value.type;
 
-		var propValueIdentifier = (valueType === 'Identifier');
-		var propValueMemberExp = (valueType === 'MemberExpression');
+		var propValueIdentifier = valueType === 'Identifier';
+		var propValueMemberExp = valueType === 'MemberExpression';
 
 		var processVars = true;
 
@@ -19,7 +19,9 @@ module.exports = context => {
 				valName = value.property.name;
 			}
 
-			processVars = (valName !== node.key.name) && !(REGEX.LANG_EMPTYFN.test(context.getSource(value)));
+			processVars =
+				valName !== node.key.name &&
+				!REGEX.LANG_EMPTYFN.test(context.getSource(value));
 		}
 
 		return processVars;
@@ -29,7 +31,13 @@ module.exports = context => {
 		var pass = true;
 
 		if (REGEX.VAR_IS.test(varName)) {
-			context.report(node, sub('Variable/property names should not start with is*: {0}', varName));
+			context.report(
+				node,
+				sub(
+					'Variable/property names should not start with is*: {0}',
+					varName
+				)
+			);
 			pass = false;
 		}
 
@@ -39,11 +47,9 @@ module.exports = context => {
 	var testFunctionParams = node => {
 		var params = node.params;
 
-		params.forEach(
-			(item, index) => {
-				testVarNames(item.name, node);
-			}
-		);
+		params.forEach((item, index) => {
+			testVarNames(item.name, node);
+		});
 	};
 
 	return {
@@ -62,29 +68,29 @@ module.exports = context => {
 		},
 
 		VariableDeclaration(node) {
-			node.declarations.forEach(
-				(item, index) => {
-					var process = true;
+			node.declarations.forEach((item, index) => {
+				var process = true;
 
-					var varName = item.id.name;
+				var varName = item.id.name;
 
-					var init = item.init;
+				var init = item.init;
 
-					if (init) {
-						var itemType = init.type;
+				if (init) {
+					var itemType = init.type;
 
-						if (itemType === 'FunctionExpression' ||
-							(itemType === 'MemberExpression' && init.property.name === varName)) {
-
-							process = false;
-						}
-					}
-
-					if (process) {
-						testVarNames(varName, node);
+					if (
+						itemType === 'FunctionExpression' ||
+						(itemType === 'MemberExpression' &&
+							init.property.name === varName)
+					) {
+						process = false;
 					}
 				}
-			);
+
+				if (process) {
+					testVarNames(varName, node);
+				}
+			});
 		}
 	};
 };

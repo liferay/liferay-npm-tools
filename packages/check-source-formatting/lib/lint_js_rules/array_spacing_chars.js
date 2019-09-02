@@ -21,7 +21,10 @@ module.exports = context => ({
 					}
 				);
 
-				var message = sub('Array items should be separated by exactly one space:{0}', missingSpaces.join(''));
+				var message = sub(
+					'Array items should be separated by exactly one space:{0}',
+					missingSpaces.join('')
+				);
 
 				context.report(node, message);
 			}

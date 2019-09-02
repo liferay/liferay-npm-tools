@@ -30,7 +30,10 @@ module.exports = {
 
 			var hexMatch = this.hasHex(rawContent);
 
-			rawContent = rawContent.replace(hexMatch, rule._reduceHex.call(this, hexMatch));
+			rawContent = rawContent.replace(
+				hexMatch,
+				rule._reduceHex.call(this, hexMatch)
+			);
 
 			return rawContent;
 		},
@@ -40,7 +43,10 @@ module.exports = {
 			return match && this.test(match, regex);
 		},
 		_reduceHex(hex) {
-			return hex.replace(REGEX.HEX_REDUNDANT, REGEX.REPLACE_HEX_REDUNDANT);
+			return hex.replace(
+				REGEX.HEX_REDUNDANT,
+				REGEX.REPLACE_HEX_REDUNDANT
+			);
 		}
 	},
 
@@ -73,16 +79,13 @@ module.exports = {
 		replacer(result, rule, context) {
 			var rawContent = context.rawContent;
 
-			return rawContent.replace(
-				rule.regex,
-				(m, bracket) => {
-					if (bracket == '{') {
-						m = `\n${m}`;
-					}
-
-					return m;
+			return rawContent.replace(rule.regex, (m, bracket) => {
+				if (bracket == '{') {
+					m = `\n${m}`;
 				}
-			);
+
+				return m;
+			});
 		},
 		test(content, regex, rule, context) {
 			var missingNewlines = false;
@@ -93,8 +96,12 @@ module.exports = {
 			var nextItem = (context.nextItem || '').trim();
 			var previousItem = (context.previousItem || '').trim();
 
-			if ((hasCloser && rule._isNextLineInvalid.call(this, nextItem)) ||
-				(hasOpener && rule._isPrevLineInvalid.call(this, previousItem) && content.indexOf('@else') !== 0)) {
+			if (
+				(hasCloser && rule._isNextLineInvalid.call(this, nextItem)) ||
+				(hasOpener &&
+					rule._isPrevLineInvalid.call(this, previousItem) &&
+					content.indexOf('@else') !== 0)
+			) {
 				missingNewlines = true;
 			}
 
@@ -102,11 +109,19 @@ module.exports = {
 		},
 
 		_isNextLineInvalid(content) {
-			return (content !== '' && !REGEX.BRACE_CLOSING.test(content) && content.indexOf('@') !== 0);
+			return (
+				content !== '' &&
+				!REGEX.BRACE_CLOSING.test(content) &&
+				content.indexOf('@') !== 0
+			);
 		},
 
 		_isPrevLineInvalid(content) {
-			return (content !== '' && !REGEX.BRACE_OPENING.test(content) && !REGEX.CSS_COMMA_END.test(content));
+			return (
+				content !== '' &&
+				!REGEX.BRACE_OPENING.test(content) &&
+				!REGEX.CSS_COMMA_END.test(content)
+			);
 		}
 	},
 
@@ -146,20 +161,21 @@ module.exports = {
 			var hasCombinator = false;
 
 			if (!this.hasProperty(item) && regex.test(item)) {
-				item.replace(
-					regex,
-					(m, before, combinator, after) => {
-						if (!hasCombinator) {
-							hasCombinator = rule._hasCombinator(before, after);
-						}
+				item.replace(regex, (m, before, combinator, after) => {
+					if (!hasCombinator) {
+						hasCombinator = rule._hasCombinator(before, after);
 					}
-				);
+				});
 			}
 
 			return hasCombinator;
 		},
 		_hasCombinator(before, after) {
-			return after !== '=' && ((before && !REGEX_WHITESPACE.test(before)) || !REGEX_WHITESPACE.test(after));
+			return (
+				after !== '=' &&
+				((before && !REGEX_WHITESPACE.test(before)) ||
+					!REGEX_WHITESPACE.test(after))
+			);
 		}
 	},
 
@@ -203,13 +219,15 @@ module.exports = {
 
 			var trailingNewlines = false;
 
-			if (hasCloser && (previousItem === '')) {
+			if (hasCloser && previousItem === '') {
 				trailingNewlines = rule.PRECEDING;
-			}
-			else if (hasOpener && (nextItem === '')) {
+			} else if (hasOpener && nextItem === '') {
 				var afterNextLine = context.collection[context.index + 2];
 
-				if (!afterNextLine || (afterNextLine && afterNextLine.trim().indexOf('/*') !== 0)) {
+				if (
+					!afterNextLine ||
+					(afterNextLine && afterNextLine.trim().indexOf('/*') !== 0)
+				) {
 					trailingNewlines = rule.TRAILING;
 				}
 			}
@@ -231,7 +249,10 @@ module.exports = {
 			replacer(result, rule, context) {
 				var rawContent = context.rawContent;
 
-				return rawContent.replace(result[0], rule._getValidReplacement(result));
+				return rawContent.replace(
+					result[0],
+					rule._getValidReplacement(result)
+				);
 			},
 			test: 'match',
 			_getValidReplacement(result) {

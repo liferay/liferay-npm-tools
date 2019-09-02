@@ -25,48 +25,35 @@ var expectedMessage = `---------------------------------------------------------
   Using the check_sf form of this module is deprecated.
   Please use the csf command instead. It's easier to type too!`;
 
-describe(
-	'deprecation checking',
-	function () {
-		'use strict';
+describe('deprecation checking', function() {
+	'use strict';
 
-		it(
-			'should return a deprecation message',
-			function() {
-				var config = Object.create(configStore);
+	it('should return a deprecation message', function() {
+		var config = Object.create(configStore);
 
-				config.set('lastDeprecationCheck', Date.now() - INTERVAL);
+		config.set('lastDeprecationCheck', Date.now() - INTERVAL);
 
-				var message = deprecationCheck(
-					{
-						config,
-						scriptName: 'check_sf'
-					}
-				);
+		var message = deprecationCheck({
+			config,
+			scriptName: 'check_sf'
+		});
 
-				assert.isString(message);
-				assert.isAbove(message.length, 0);
-				assert.equal(message, expectedMessage);
-			}
-		);
+		assert.isString(message);
+		assert.isAbove(message.length, 0);
+		assert.equal(message, expectedMessage);
+	});
 
-		it(
-			'should not return a deprecation message',
-			function() {
-				var config = Object.create(configStore);
+	it('should not return a deprecation message', function() {
+		var config = Object.create(configStore);
 
-				config.set('lastDeprecationCheck', Date.now());
+		config.set('lastDeprecationCheck', Date.now());
 
-				var message = deprecationCheck(
-					{
-						config,
-						scriptName: 'check_sf'
-					}
-				);
+		var message = deprecationCheck({
+			config,
+			scriptName: 'check_sf'
+		});
 
-				assert.isString(message);
-				assert.equal(message.length, 0);
-			}
-		);
-	}
-);
+		assert.isString(message);
+		assert.equal(message.length, 0);
+	});
+});

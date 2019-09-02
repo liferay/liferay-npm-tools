@@ -28,41 +28,25 @@ class Config {
 	_normalize(obj) {
 		const fn = this._get.bind(this);
 
-		Object.defineProperty(
-			fn,
-			'toJSON',
-			{
-				enumerable: false,
-				value: _.bindKey(this, 'toJSON')
-			}
-		);
+		Object.defineProperty(fn, 'toJSON', {
+			enumerable: false,
+			value: _.bindKey(this, 'toJSON')
+		});
 
-		Object.defineProperty(
-			fn,
-			'toString',
-			{
-				enumerable: false,
-				value: JSON.stringify.bind(JSON, fn)
-			}
-		);
+		Object.defineProperty(fn, 'toString', {
+			enumerable: false,
+			value: JSON.stringify.bind(JSON, fn)
+		});
 
-		Object.defineProperty(
-			fn,
-			'inspect',
-			{
-				enumerable: false,
-				value: fn.toString
-			}
-		);
+		Object.defineProperty(fn, 'inspect', {
+			enumerable: false,
+			value: fn.toString
+		});
 
-		Object.defineProperty(
-			fn,
-			'_paths',
-			{
-				enumerable: false,
-				value: {}
-			}
-		);
+		Object.defineProperty(fn, '_paths', {
+			enumerable: false,
+			value: {}
+		});
 
 		return _.merge(fn, CONFIG_DEFAULT, obj);
 	}
@@ -70,20 +54,18 @@ class Config {
 
 class Loader {
 	constructor(options) {
-		options = _.defaults(
-			options,
-			{
-				cwd: process.cwd(),
-				packageProp: 'csfConfig'
-			}
-		);
+		options = _.defaults(options, {
+			cwd: process.cwd(),
+			packageProp: 'csfConfig'
+		});
 
 		this._config = cosmiconfig('csf', options);
 	}
 
 	load(cwd) {
-		return this._config.search(cwd).then(
-			obj => {
+		return this._config
+			.search(cwd)
+			.then(obj => {
 				const config = new Config(obj ? obj.config : {});
 
 				config._paths.cwd = cwd;
@@ -114,9 +96,8 @@ class Loader {
 				}
 
 				return config;
-			}
-		).catch(
-			err => {
+			})
+			.catch(err => {
 				const config = new Config();
 
 				config._paths.cwd = cwd;
@@ -124,8 +105,7 @@ class Loader {
 				config._paths.err = err;
 
 				return config;
-			}
-		);
+			});
 	}
 }
 

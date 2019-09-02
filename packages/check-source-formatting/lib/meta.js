@@ -14,58 +14,63 @@ var VERBOSE = argv.v;
 var extractRequires = node => {
 	var requires = [];
 
-	if (node && node.type == 'Property' && node.key.name == 'requires' && node.value && node.value.elements) {
-		node.value.elements.forEach(
-			(item, index) => {
-				requires.push(item.value);
-			}
-		);
+	if (
+		node &&
+		node.type == 'Property' &&
+		node.key.name == 'requires' &&
+		node.value &&
+		node.value.elements
+	) {
+		node.value.elements.forEach((item, index) => {
+			requires.push(item.value);
+		});
 	}
 
 	return requires;
 };
 
 var extractModuleMetaData = (node, metaDataObj) => {
-	if (node.type == 'Property' && node.key.name == 'modules'
-		&& node.parent.parent.type == 'Property' && node.parent.parent.key.name == 'liferay'
-		&& node.value.type == 'ObjectExpression'
+	if (
+		node.type == 'Property' &&
+		node.key.name == 'modules' &&
+		node.parent.parent.type == 'Property' &&
+		node.parent.parent.key.name == 'liferay' &&
+		node.value.type == 'ObjectExpression'
 	) {
 		var objSource = node.value.source();
 
-		node.value.properties.forEach(
-			(item, index) => {
-				var val = item.value;
-				var metaDataItem = {};
+		node.value.properties.forEach((item, index) => {
+			var val = item.value;
+			var metaDataItem = {};
 
-				if (val.type == 'ObjectExpression') {
-					val.properties.forEach(
-						(valItem, valIndex) => {
-							var propName = valItem.key.name;
-							var propValue = valItem.value;
+			if (val.type == 'ObjectExpression') {
+				val.properties.forEach((valItem, valIndex) => {
+					var propName = valItem.key.name;
+					var propValue = valItem.value;
 
-							var metaDataItemValue = null;
+					var metaDataItemValue = null;
 
-							if (propName == 'path') {
-								metaDataItemValue = propValue.value;
+					if (propName == 'path') {
+						metaDataItemValue = propValue.value;
 
-								metaDataObj.files.push(metaDataItemValue);
-							}
-							else if (propName == 'requires' && propValue.type == 'ArrayExpression') {
-								// console.log(propName, propValue.elements);
+						metaDataObj.files.push(metaDataItemValue);
+					} else if (
+						propName == 'requires' &&
+						propValue.type == 'ArrayExpression'
+					) {
+						// console.log(propName, propValue.elements);
 
-								metaDataItemValue = extractRequires(valItem);
-							}
+						metaDataItemValue = extractRequires(valItem);
+					}
 
-							if (metaDataItemValue) {
-								metaDataItem[propName] = metaDataItemValue;
-							}
-						}
-					);
-				}
-
-				metaDataObj.meta[item.key.value] = metaDataItem;
+					if (metaDataItemValue) {
+						metaDataItem[propName] = metaDataItemValue;
+					}
+				});
 			}
-		);
+
+			metaDataObj.meta[item.key.value] = metaDataItem;
+		});
 	}
 
 	return metaDataObj;
@@ -77,10 +82,17 @@ var extractFileMetaData = (node, moduleInfo, fileName) => {
 			var moduleDef = node.parent.parent;
 			var moduleDefArgs = moduleDef.arguments;
 
-			if (moduleDefArgs && moduleDefArgs.length && moduleDefArgs[0].type == 'Literal') {
+			if (
+				moduleDefArgs &&
+				moduleDefArgs.length &&
+				moduleDefArgs[0].type == 'Literal'
+			) {
 				var moduleName = moduleDefArgs[0].value;
 
-				if (moduleName && !moduleInfo.fileMeta.hasOwnProperty(moduleName)) {
+				if (
+					moduleName &&
+					!moduleInfo.fileMeta.hasOwnProperty(moduleName)
+				) {
 					var fileModuleMetaData = extractRequires(node);
 
 					moduleInfo.fileMeta[moduleName] = {
@@ -95,16 +107,15 @@ var extractFileMetaData = (node, moduleInfo, fileName) => {
 	return moduleInfo;
 };
 
-var readFile = (filePath, fileName, moduleInfo) => fs.readFileAsync(filePath).then(
-	contents => {
-		contents = falafel(
-			contents.toString(),
-			node => {
+var readFile = (filePath, fileName, moduleInfo) =>
+	fs
+		.readFileAsync(filePath)
+		.then(contents => {
+			contents = falafel(contents.toString(), node => {
 				moduleInfo = extractFileMetaData(node, moduleInfo, fileName);
-			}
-		);
-	}
-).catch(_.noop);
+			});
+		})
+		.catch(_.noop);
 
 var checkMissingModuleInfo = (files, metaDataObj) => {
 	var missingModules = metaDataObj.missing;
@@ -119,31 +130,29 @@ var checkMissingModuleInfo = (files, metaDataObj) => {
 			smallest = files;
 		}
 
-		missingModules = largest.reduce(
-			(prev, item, index) => {
-				if (smallest.indexOf(item) === -1) {
-					prev.push(item);
-				}
+		missingModules = largest.reduce((prev, item, index) => {
+			if (smallest.indexOf(item) === -1) {
+				prev.push(item);
+			}
 
-				return prev;
-			},
-			missingModules
-		);
+			return prev;
+		}, missingModules);
 	}
 
 	return metaDataObj;
 };
 
-var diffArray = (array, values) => array.filter(
-	(item, index) => values.indexOf(item) == -1
-);
+var diffArray = (array, values) =>
+	array.filter((item, index) => values.indexOf(item) == -1);
 
 var checkMetaData = config => {
 	var done = config.done;
 
 	var liferayModuleDir = config.liferayModuleDir;
 
-	var moduleContents = fs.readFileSync(path.join(liferayModuleDir, 'modules.js'));
+	var moduleContents = fs.readFileSync(
+		path.join(liferayModuleDir, 'modules.js')
+	);
 
 	var moduleInfo = {
 		fileMeta: {},
@@ -168,141 +177,179 @@ var checkMetaData = config => {
 
 	var fileSeries = [];
 
-	fs.readdirAsync(liferayModuleDir).then(
-		files => {
-			files = files.filter(
-				(item, index) => path.extname(item) == '.js' && item !== 'modules.js'
+	fs.readdirAsync(liferayModuleDir).then(files => {
+		files = files.filter(
+			(item, index) =>
+				path.extname(item) == '.js' && item !== 'modules.js'
+		);
+
+		checkMissingModuleInfo(files, moduleInfo);
+
+		var updateModules = [];
+
+		files.forEach((item, index) => {
+			fileSeries.push(
+				readFile(path.join(liferayModuleDir, item), item, moduleInfo)
 			);
+		});
 
-			checkMissingModuleInfo(files, moduleInfo);
+		return Promsie.all(fileSeries).then(results => {
+			var moduleKeys = Object.keys(moduleInfo.meta);
+			var fileModuleKeys = Object.keys(moduleInfo.fileMeta);
 
-			var updateModules = [];
+			var largest = moduleInfo.meta;
+			var smallest = moduleInfo.fileMeta;
 
-			files.forEach(
-				(item, index) => {
-					fileSeries.push(readFile(path.join(liferayModuleDir, item), item, moduleInfo));
-				}
-			);
+			if (moduleKeys.length < fileModuleKeys.length) {
+				largest = moduleInfo.fileMeta;
+				smallest = moduleInfo.meta;
+			}
 
-			return Promsie.all(fileSeries).then(
-				results => {
-					var moduleKeys = Object.keys(moduleInfo.meta);
-					var fileModuleKeys = Object.keys(moduleInfo.fileMeta);
+			var combined = _.uniq(moduleKeys.concat(fileModuleKeys));
 
-					var largest = moduleInfo.meta;
-					var smallest = moduleInfo.fileMeta;
+			var needsMetaSync = [];
+			var needsModuleData = [];
+			var needsFileData = [];
 
-					if (moduleKeys.length < fileModuleKeys.length) {
-						largest = moduleInfo.fileMeta;
-						smallest = moduleInfo.meta;
-					}
+			combined.forEach((item, index) => {
+				var moduleMeta = moduleInfo.meta[item];
+				var fileMeta = moduleInfo.fileMeta[item];
 
-					var combined = _.uniq(moduleKeys.concat(fileModuleKeys));
+				var hasModuleMeta = !!moduleMeta;
+				var hasFileMeta = !!fileMeta;
 
-					var needsMetaSync = [];
-					var needsModuleData = [];
-					var needsFileData = [];
+				var modFileIdentifier = `${item}: ${
+					hasFileMeta ? fileMeta.path : moduleMeta.path
+				}`;
 
-					combined.forEach(
-						(item, index) => {
-							var moduleMeta = moduleInfo.meta[item];
-							var fileMeta = moduleInfo.fileMeta[item];
+				if (!hasModuleMeta && hasFileMeta) {
+					needsModuleData.push(modFileIdentifier);
+				} else if (hasModuleMeta && !hasFileMeta) {
+					needsFileData.push(modFileIdentifier);
+				} else {
+					if (!moduleMeta.requires && fileMeta.requires) {
+						needsMetaSync.push(modFileIdentifier);
 
-							var hasModuleMeta = !!moduleMeta;
-							var hasFileMeta = !!fileMeta;
+						if (VERBOSE) {
+							needsMetaSync.push(
+								`${INDENT}modules.js: ${moduleMeta.requires}`
+							);
+							needsMetaSync.push(
+								`${INDENT +
+									fileMeta.path}: ${fileMeta.requires.join(
+									', '
+								)}`
+							);
+						}
+					} else if (moduleMeta.requires && !fileMeta.requires) {
+						needsMetaSync.push(modFileIdentifier);
 
-							var modFileIdentifier = `${item}: ${hasFileMeta ? fileMeta.path : moduleMeta.path}`;
+						if (VERBOSE) {
+							needsMetaSync.push(
+								`${INDENT}modules.js: ${moduleMeta.requires.join(
+									', '
+								)}`
+							);
+							needsMetaSync.push(
+								`${INDENT + fileMeta.path}: ${
+									fileMeta.requires
+								}`
+							);
+						}
+					} else {
+						var largeReq = moduleMeta.requires;
+						var smallReq = fileMeta.requires;
 
-							if (!hasModuleMeta && hasFileMeta) {
-								needsModuleData.push(modFileIdentifier);
-							}
-							else if (hasModuleMeta && !hasFileMeta) {
-								needsFileData.push(modFileIdentifier);
-							}
-							else {
-								if (!moduleMeta.requires && fileMeta.requires) {
-									needsMetaSync.push(modFileIdentifier);
+						if (
+							moduleMeta.requires.length <
+							fileMeta.requires.length
+						) {
+							largeReq = fileMeta.requires;
+							smallReq = moduleMeta.requires;
+						}
 
-									if (VERBOSE) {
-										needsMetaSync.push(`${INDENT}modules.js: ${moduleMeta.requires}`);
-										needsMetaSync.push(`${INDENT + fileMeta.path}: ${fileMeta.requires.join(', ')}`);
-									}
-								}
-								else if (moduleMeta.requires && !fileMeta.requires) {
-									needsMetaSync.push(modFileIdentifier);
+						largeReq.sort();
+						smallReq.sort();
 
-									if (VERBOSE) {
-										needsMetaSync.push(`${INDENT}modules.js: ${moduleMeta.requires.join(', ')}`);
-										needsMetaSync.push(`${INDENT + fileMeta.path}: ${fileMeta.requires}`);
-									}
-								}
-								else {
-									var largeReq = moduleMeta.requires;
-									var smallReq = fileMeta.requires;
+						if (largeReq.join() !== smallReq.join()) {
+							needsMetaSync.push(modFileIdentifier);
 
-									if (moduleMeta.requires.length < fileMeta.requires.length) {
-										largeReq = fileMeta.requires;
-										smallReq = moduleMeta.requires;
-									}
+							if (VERBOSE) {
+								needsMetaSync.push(
+									`${INDENT}modules.js: ${moduleMeta.requires.join(
+										', '
+									)}`
+								);
+								needsMetaSync.push(
+									`${INDENT +
+										fileMeta.path}: ${fileMeta.requires.join(
+										', '
+									)}`
+								);
 
-									largeReq.sort();
-									smallReq.sort();
+								var merged = fileMeta.requires.concat(
+									moduleMeta.requires
+								);
 
-									if (largeReq.join() !== smallReq.join()) {
-										needsMetaSync.push(modFileIdentifier);
+								merged = _.uniq(merged).sort();
 
-										if (VERBOSE) {
-											needsMetaSync.push(`${INDENT}modules.js: ${moduleMeta.requires.join(', ')}`);
-											needsMetaSync.push(`${INDENT + fileMeta.path}: ${fileMeta.requires.join(', ')}`);
-
-											var merged = fileMeta.requires.concat(moduleMeta.requires);
-
-											merged = _.uniq(merged).sort();
-
-											needsMetaSync.push(`${INDENT}merged: '${merged.join('\', \'')}'`);
-											needsMetaSync.push('---');
-										}
-									}
-								}
+								needsMetaSync.push(
+									`${INDENT}merged: '${merged.join("', '")}'`
+								);
+								needsMetaSync.push('---');
 							}
 						}
-					);
-
-					if (needsMetaSync.length) {
-						console.log('The following modules/files need their requires arrays synced with modules.js:');
-
-						console.log(colors.warn(INDENT + needsMetaSync.join('\n' + INDENT)));
-
-						console.log(colors.subtle('----'));
-					}
-
-					if (needsModuleData.length) {
-						console.log('The following modules/files need their metadata added to modules.js:');
-
-						console.log(colors.warn(INDENT + needsModuleData.join('\n' + INDENT)));
-
-						console.log(colors.subtle('----'));
-					}
-
-					if (needsFileData.length) {
-						console.log('The following modules/files need their meta data added to their files:');
-
-						console.log(colors.warn(INDENT + needsFileData.join('\n' + INDENT)));
-
-						console.log(colors.subtle('----'));
-					}
-
-					if (VERBOSE && moduleInfo.missing.length) {
-						console.log('The following files are missing any metadata:');
-
-						console.log(colors.warn(INDENT + moduleInfo.missing.join('\n' + INDENT)));
-
-						console.log(colors.subtle('----'));
 					}
 				}
-			);
-		}
-	);
+			});
+
+			if (needsMetaSync.length) {
+				console.log(
+					'The following modules/files need their requires arrays synced with modules.js:'
+				);
+
+				console.log(
+					colors.warn(INDENT + needsMetaSync.join('\n' + INDENT))
+				);
+
+				console.log(colors.subtle('----'));
+			}
+
+			if (needsModuleData.length) {
+				console.log(
+					'The following modules/files need their metadata added to modules.js:'
+				);
+
+				console.log(
+					colors.warn(INDENT + needsModuleData.join('\n' + INDENT))
+				);
+
+				console.log(colors.subtle('----'));
+			}
+
+			if (needsFileData.length) {
+				console.log(
+					'The following modules/files need their meta data added to their files:'
+				);
+
+				console.log(
+					colors.warn(INDENT + needsFileData.join('\n' + INDENT))
+				);
+
+				console.log(colors.subtle('----'));
+			}
+
+			if (VERBOSE && moduleInfo.missing.length) {
+				console.log('The following files are missing any metadata:');
+
+				console.log(
+					colors.warn(INDENT + moduleInfo.missing.join('\n' + INDENT))
+				);
+
+				console.log(colors.subtle('----'));
+			}
+		});
+	});
 };
 
 module.exports = {

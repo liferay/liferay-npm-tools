@@ -14,12 +14,10 @@ module.exports = {
 
 		var checkReturns = node => {
 			if (funcInfo.returnCount > 1) {
-				context.report(
-					{
-						message: 'Functions should only have one return statement',
-						node
-					}
-				);
+				context.report({
+					message: 'Functions should only have one return statement',
+					node
+				});
 			}
 		};
 

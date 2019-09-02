@@ -19,14 +19,11 @@ module.exports = {
 		test(content, regex) {
 			var invalid = false;
 
-			content.replace(
-				regex,
-				(str, fnName) => {
-					if (fnName !== 'function') {
-						invalid = true;
-					}
+			content.replace(regex, (str, fnName) => {
+				if (fnName !== 'function') {
+					invalid = true;
 				}
-			);
+			});
 
 			return invalid;
 		}
@@ -36,7 +33,10 @@ module.exports = {
 		message(result, rule, context) {
 			var message = 'Needs a space between ")" and "{bracket}": {1}';
 
-			return sub(this.message(message, result, rule, context), rule._bracket);
+			return sub(
+				this.message(message, result, rule, context),
+				rule._bracket
+			);
 		},
 		regex: /\)\{(?!\})/,
 		replacer: ') {',
@@ -51,7 +51,8 @@ module.exports = {
 	},
 
 	invalidFunctionFormat: {
-		message: 'Anonymous function expressions should be formatted as function(: {1}',
+		message:
+			'Anonymous function expressions should be formatted as function(: {1}',
 		regex: /function\s+\(/,
 		replacer: 'function('
 	},
@@ -78,9 +79,13 @@ module.exports = {
 			var nextLineEmpty = context.nextItem == '';
 			var nextLineHasVar = this.test(context.nextItem, regex);
 
-			var nextLineValid = (nextLineEmpty || nextLineHasVar);
+			var nextLineValid = nextLineEmpty || nextLineHasVar;
 
-			return this.test(content, /;$/) && this.test(content, regex) && !nextLineValid;
+			return (
+				this.test(content, /;$/) &&
+				this.test(content, regex) &&
+				!nextLineValid
+			);
 		}
 	}
 };

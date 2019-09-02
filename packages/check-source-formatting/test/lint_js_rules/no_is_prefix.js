@@ -28,27 +28,27 @@ ruleTester.run(
 		invalid: [
 			{
 				code: 'var isString;',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			},
 			{
 				code: 'var isString = 1;',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			},
 			{
 				code: 'var o = {isString: 1}',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			},
 			{
 				code: 'var o = {isString: isFoo}',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			},
 			{
 				code: 'function foo(isString){}',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			},
 			{
 				code: 'var x = function(isString){}',
-				errors: [ { message: STR_ERROR + 'isString' } ]
+				errors: [{message: STR_ERROR + 'isString'}]
 			}
 		]
 	}

@@ -1,7 +1,6 @@
 var optimist = require('optimist')
-.usage('Usage: $0 -qo')
-.options(
-	{
+	.usage('Usage: $0 -qo')
+	.options({
 		config: {
 			default: true,
 			string: true
@@ -76,8 +75,7 @@ var optimist = require('optimist')
 			boolean: true,
 			default: false
 		}
-	}
-);
+	});
 
 var argv = optimist.argv;
 
@@ -87,8 +85,7 @@ if (argv.h || argv.V) {
 
 	if (argv.h) {
 		optimist.showHelp();
-	}
-	else if (argv.V) {
+	} else if (argv.V) {
 		console.log(require('../package.json').version);
 	}
 

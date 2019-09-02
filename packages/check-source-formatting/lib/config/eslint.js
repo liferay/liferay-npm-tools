@@ -1,44 +1,44 @@
 module.exports = {
-	'env': {
-		'amd': false,
-		'browser': true,
-		'es6': true,
-		'mocha': true,
-		'node': true
+	env: {
+		amd: false,
+		browser: true,
+		es6: true,
+		mocha: true,
+		node: true
 	},
 
-	'parser': 'babel-eslint',
+	parser: 'babel-eslint',
 
-	'parserOptions': {
-		'ecmaFeatures': {
-			'experimentalObjectRestSpread': true,
-			'jsx': true
+	parserOptions: {
+		ecmaFeatures: {
+			experimentalObjectRestSpread: true,
+			jsx: true
 		},
-		'ecmaVersion': 7,
-		'sourceType': 'module'
+		ecmaVersion: 7,
+		sourceType: 'module'
 	},
 
-	'globals': {
-		'alert': true,
-		'AUI': true,
-		'CKEDITOR': true,
-		'confirm': true,
-		'Liferay': true,
-		'submitForm': true,
-		'themeDisplay': true,
-		'tinyMCE': true,
-		'YUI': true
+	globals: {
+		alert: true,
+		AUI: true,
+		CKEDITOR: true,
+		confirm: true,
+		Liferay: true,
+		submitForm: true,
+		themeDisplay: true,
+		tinyMCE: true,
+		YUI: true
 	},
 
-	'rules': {
+	rules: {
 		'array-bracket-spacing': [2, 'never'],
 		'block-scoped-var': 2,
 		'brace-style': [2, 'stroustrup'],
-		'camelcase': 0,
+		camelcase: 0,
 		'comma-dangle': [2, 'never'],
 		'comma-spacing': 2,
 		'comma-style': [2, 'last'],
-		'complexity': [0, 11],
+		complexity: [0, 11],
 		'consistent-return': 2,
 		'consistent-this': [1, 'instance'],
 
@@ -63,27 +63,27 @@ module.exports = {
 		'csf-no-use-before-define': [
 			2,
 			{
-				'classes': true,
-				'functions': true,
-				'samescope': true
+				classes: true,
+				functions: true,
+				samescope: true
 			}
 		],
 		'csf-sort-constants': 2,
 		'csf-sort-props': 2,
 		'csf-sort-requires': 2,
 		'csf-sort-vars': 2,
-		'curly': [2, 'all'],
+		curly: [2, 'all'],
 		'default-case': 0,
 		'dot-location': [2, 'property'],
 		'dot-notation': 2,
 		'eol-last': 0,
-		'eqeqeq': 0,
+		eqeqeq: 0,
 		'func-names': 0,
 		'func-style': [0, 'declaration'],
 		'generator-star-spacing': 0,
 		'guard-for-in': 0,
 		'handle-callback-err': 0,
-		'indent': [2, 'tab'],
+		indent: [2, 'tab'],
 		'key-spacing': 2,
 		'keyword-spacing': [
 			2,
@@ -191,8 +191,8 @@ module.exports = {
 		'no-unused-vars': [
 			2,
 			{
-				'args': 'none',
-				'vars': 'local'
+				args: 'none',
+				vars: 'local'
 			}
 		],
 		'no-use-before-define': [0],
@@ -201,8 +201,8 @@ module.exports = {
 		'no-warning-comments': [
 			0,
 			{
-				'location': 'start',
-				'terms': ['todo', 'fixme', 'xxx']
+				location: 'start',
+				terms: ['todo', 'fixme', 'xxx']
 			}
 		],
 		'no-with': 2,
@@ -213,9 +213,9 @@ module.exports = {
 		'operator-assignment': [2, 'always'],
 		'padded-blocks': 0,
 		'quote-props': 0,
-		'quotes': [2, 'single'],
-		'radix': 2,
-		'semi': [2, 'always'],
+		quotes: [2, 'single'],
+		radix: 2,
+		semi: [2, 'always'],
 		'semi-spacing': [
 			2,
 			{
@@ -236,21 +236,21 @@ module.exports = {
 		'space-unary-ops': [
 			1,
 			{
-				'nonwords': false,
-				'words': true
+				nonwords: false,
+				words: true
 			}
 		],
 		'spaced-comment': [2, 'always'],
 		'template-curly-spacing': [2, 'never'],
 		'no-self-assign': 2,
-		'strict': 0,
+		strict: 0,
 		'use-isnan': 2,
 		'valid-jsdoc': 0,
 		'valid-typeof': 2,
 		'vars-on-top': 0,
 		'wrap-iife': 0,
 		'wrap-regex': 0,
-		'yoda': 2,
+		yoda: 2,
 
 		// Investigate
 
@@ -284,10 +284,10 @@ module.exports = {
 		'lines-around-comment': [
 			2,
 			{
-				'afterBlockComment': false,
-				'afterLineComment': true,
-				'beforeBlockComment': true,
-				'beforeLineComment': true
+				afterBlockComment: false,
+				afterLineComment: true,
+				beforeBlockComment: true,
+				beforeLineComment: true
 			}
 		],
 		'newline-per-chained-call': 0,

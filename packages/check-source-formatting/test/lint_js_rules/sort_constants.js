@@ -23,27 +23,26 @@ ruleTester.run(
 			'var DEF = function(){};\n\nvar ABC = DEF();',
 			'var DEF = function(){};\n\nvar ABC = foo(DEF);'
 		].concat(
-			[
-				{code: 'var DEF = "Hello";\n\nvar ABC = {[DEF]: 1};'},
-			].map(addES6)
+			[{code: 'var DEF = "Hello";\n\nvar ABC = {[DEF]: 1};'}].map(addES6)
 		),
 
 		invalid: [
 			{
 				code: 'var DEF = 456;\n\nvar ABC = 123;',
-				errors: [ { message: 'Sort constants: DEF ABC' } ]
+				errors: [{message: 'Sort constants: DEF ABC'}]
 			},
 			{
-				code: 'var DEF = 456;\n\nvar DEF_XYZ = "FOO";\n\nvar ABC = 123;',
-				errors: [ { message: 'Sort constants: DEF_XYZ ABC' } ]
+				code:
+					'var DEF = 456;\n\nvar DEF_XYZ = "FOO";\n\nvar ABC = 123;',
+				errors: [{message: 'Sort constants: DEF_XYZ ABC'}]
 			},
 			{
 				code: 'var DEF = 456;\n\nvar ABC = "DEF";',
-				errors: [ { message: 'Sort constants: DEF ABC' } ]
+				errors: [{message: 'Sort constants: DEF ABC'}]
 			},
 			{
 				code: 'var DEF = 456;\n\nvar ABC;',
-				errors: [ { message: 'Sort constants: DEF ABC' } ]
+				errors: [{message: 'Sort constants: DEF ABC'}]
 			}
 		]
 	}

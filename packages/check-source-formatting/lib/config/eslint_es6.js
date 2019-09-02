@@ -1,10 +1,7 @@
 module.exports = {
-	'plugins': [
-		'react',
-		'sort-imports-es6-autofix'
-	],
+	plugins: ['react', 'sort-imports-es6-autofix'],
 
-	'rules': {
+	rules: {
 		'jsx-quotes': [2, 'prefer-double'],
 		'jsx-uses-react': 2,
 		'jsx-uses-vars': 2,
@@ -22,16 +19,16 @@ module.exports = {
 		'jsx-sort-props': [
 			2,
 			{
-				'ignoreCase': true
+				ignoreCase: true
 			}
 		],
 		'no-multi-comp': [
 			0,
 			{
-				'ignoreStateless': true
+				ignoreStateless: true
 			}
 		],
-		'jsx-wrap-multilines': [2/* , {'ignoreStateless': true} */],
+		'jsx-wrap-multilines': [2 /* , {'ignoreStateless': true} */],
 		'no-unknown-property': 2,
 		'sort-comp': [
 			0,
@@ -67,11 +64,14 @@ module.exports = {
 				]
 			}
 		],
-		'sort-imports-es6-autofix/sort-imports-es6': [2, {
-			'ignoreCase': true,
-			'ignoreMemberSort': false,
-			'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple']
-		}],
+		'sort-imports-es6-autofix/sort-imports-es6': [
+			2,
+			{
+				ignoreCase: true,
+				ignoreMemberSort: false,
+				memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple']
+			}
+		],
 		'prop-types': 0,
 		'display-name': 0,
 		'no-danger': 0,
@@ -94,7 +94,7 @@ module.exports = {
 		'sort-prop-types': [
 			2,
 			{
-				'ignoreCase': true
+				ignoreCase: true
 			}
 		],
 		'no-direct-mutation-state': 2,
@@ -110,13 +110,13 @@ module.exports = {
 			2,
 			'always',
 			{
-				'ignoreConstructors': true
+				ignoreConstructors: true
 			}
 		],
 		'prefer-arrow-callback': [
 			2,
 			{
-				'allowNamedFunctions': true
+				allowNamedFunctions: true
 			}
 		],
 		'no-new-symbol': 2,

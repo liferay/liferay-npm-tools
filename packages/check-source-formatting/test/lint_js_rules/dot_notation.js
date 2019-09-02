@@ -9,16 +9,11 @@ var RuleTester = lint.eslint.RuleTester;
 
 var ruleTester = new RuleTester();
 
-var validRules = [
-	'document["some-prop"];'
-];
+var validRules = ['document["some-prop"];'];
 
-_.forEach(
-	base.stubs,
-	function(item, index) {
-		validRules.push('document["' + index + '"];');
-	}
-);
+_.forEach(base.stubs, function(item, index) {
+	validRules.push('document["' + index + '"];');
+});
 
 ruleTester.run(
 	path.basename(__filename, '.js'),
@@ -29,7 +24,9 @@ ruleTester.run(
 		invalid: [
 			{
 				code: 'document["test"]',
-				errors: [ { message: '["test"] is better written in dot notation.' } ]
+				errors: [
+					{message: '["test"] is better written in dot notation.'}
+				]
 			}
 		]
 	}

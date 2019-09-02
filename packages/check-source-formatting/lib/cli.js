@@ -24,8 +24,8 @@ var EventEmitter = require('drip').EnhancedEmitter;
 var Logger = require('./logger');
 
 var MAP_OMIT = {
-	'$0': true,
-	'_': true
+	$0: true,
+	_: true
 };
 
 var flags = _.reduce(
@@ -68,39 +68,31 @@ class CLI extends EventEmitter {
 	init() {
 		var instance = this;
 
-		this._config = new Config.Loader(
-			{
-				cwd: instance._cwd
-			}
-		);
+		this._config = new Config.Loader({
+			cwd: instance._cwd
+		});
 
 		return Promise.map(instance._args, _.unary(glob))
-		.map(
-			(item, index) => {
+			.map((item, index) => {
 				if (!item.length) {
 					item = instance._args[index];
 				}
 
 				return item;
-			}
-		)
-		.then(_.flatten)
-		.then(
-			args => {
+			})
+			.then(_.flatten)
+			.then(args => {
 				instance._args = args;
-			}
-		)
-		.bind(instance)
-		.then(this._loadConfigs)
-		.then(
-			configs => {
+			})
+			.bind(instance)
+			.then(this._loadConfigs)
+			.then(configs => {
 				instance._configs = configs;
 
 				return configs;
-			}
-		)
-		.bind(instance)
-		.then(instance._start);
+			})
+			.bind(instance)
+			.then(instance._start);
 	}
 
 	afterFormat(results) {
@@ -123,17 +115,15 @@ class CLI extends EventEmitter {
 		}
 
 		return Promise.all(series)
-				.then(instance.onFinish.bind(instance, results))
-				.catch(instance.logGeneralError.bind(instance));
+			.then(instance.onFinish.bind(instance, results))
+			.catch(instance.logGeneralError.bind(instance));
 	}
 
 	checkMeta(results) {
 		if (this._CHECK_META) {
-			require(this._metaCheckerPath).check(
-				{
-					liferayModuleDir: this._liferayModuleDir
-				}
-			);
+			require(this._metaCheckerPath).check({
+				liferayModuleDir: this._liferayModuleDir
+			});
 		}
 
 		return results;
@@ -141,12 +131,10 @@ class CLI extends EventEmitter {
 
 	createReport(results) {
 		if (this.flags.junit) {
-			var junit = new this.junit(
-				{
-					flags: this.flags,
-					logger: this._logger
-				}
-			);
+			var junit = new this.junit({
+				flags: this.flags,
+				logger: this._logger
+			});
 
 			results = junit.generate().return(results);
 		}
@@ -173,10 +161,17 @@ class CLI extends EventEmitter {
 	}
 
 	isMetaCheckNeeded(file) {
-		if (!this._CHECK_META && this.flags.checkMetadata && path.extname(file) === '.js') {
+		if (
+			!this._CHECK_META &&
+			this.flags.checkMetadata &&
+			path.extname(file) === '.js'
+		) {
 			var fileDir = path.dirname(path.resolve(file));
 
-			if (path.basename(fileDir) === 'liferay' && this.hasModulesFile(fileDir)) {
+			if (
+				path.basename(fileDir) === 'liferay' &&
+				this.hasModulesFile(fileDir)
+			) {
 				this._CHECK_META = true;
 				this._liferayModuleDir = fileDir;
 			}
@@ -184,7 +179,10 @@ class CLI extends EventEmitter {
 	}
 
 	logGeneralError(err) {
-		var msg = util.format(`${colors.error('Something went wrong.\nDetails below:')}\n%s`, err.stack);
+		var msg = util.format(
+			`${colors.error('Something went wrong.\nDetails below:')}\n%s`,
+			err.stack
+		);
 
 		this._log(msg);
 
@@ -241,21 +239,18 @@ class CLI extends EventEmitter {
 		var errorFiles = Object.keys(instance._logger.getErrors());
 
 		if (errorFiles.length) {
-			instance._exec(
-				'git config --get user.editor',
-				res => {
-					instance._exec(
-						`open -a "${res[0]}" "${errorFiles.join('" "')}"`
-					);
-				}
-			);
+			instance._exec('git config --get user.editor', res => {
+				instance._exec(
+					`open -a "${res[0]}" "${errorFiles.join('" "')}"`
+				);
+			});
 		}
 	}
 
 	processFile(file) {
 		return this._read(file, 'utf-8')
-				.then(_.bindKeyRight(this, 'onRead', file))
-				.error(_.bindKeyRight(this, 'onReadError', file));
+			.then(_.bindKeyRight(this, 'onRead', file))
+			.error(_.bindKeyRight(this, 'onReadError', file));
 	}
 
 	processFileData(data, formatter) {
@@ -263,17 +258,15 @@ class CLI extends EventEmitter {
 
 		var res = Promise.resolve(formatter.format(data));
 
-		return res.bind(this).then(
-			function(contents) {
-				this.logResults(this.renderOutput(file), file);
+		return res.bind(this).then(function(contents) {
+			this.logResults(this.renderOutput(file), file);
 
-				return {
-					contents,
-					data,
-					file
-				};
-			}
-		);
+			return {
+				contents,
+				data,
+				file
+			};
+		});
 	}
 
 	renderOutput(file) {
@@ -291,16 +284,12 @@ class CLI extends EventEmitter {
 
 		if (flags.filenames) {
 			out = this._logger.renderFileNames(file, config);
-		}
-		else {
+		} else {
 			config.showBanner = flags.quiet;
 			config.showLintIds = flags.lintIds;
 
 			if (flags.quiet) {
-				this._logger.filterFileErrors(
-					file,
-					filterFileErrors
-				);
+				this._logger.filterFileErrors(file, filterFileErrors);
 			}
 
 			out = this._logger.render(file, config);
@@ -311,9 +300,9 @@ class CLI extends EventEmitter {
 
 	writeFile(file, contents) {
 		return this._write(file, contents)
-				.then(_.bind(_.ary(util.format, 2), util, 'Wrote file: %s', file))
-				.error(File.handleFileWriteError.bind(this, file))
-				.then(_.unary(this._log).bind(this));
+			.then(_.bind(_.ary(util.format, 2), util, 'Wrote file: %s', file))
+			.error(File.handleFileWriteError.bind(this, file))
+			.then(_.unary(this._log).bind(this));
 	}
 
 	_loadConfigs() {
@@ -328,8 +317,7 @@ class CLI extends EventEmitter {
 
 				if (instance.flags.config) {
 					res = instance._config.load(filePath);
-				}
-				else {
+				} else {
 					var cfg = new Config({});
 
 					cfg._paths.cwd = instance._cwd;
@@ -337,19 +325,17 @@ class CLI extends EventEmitter {
 					res = Promise.resolve(cfg);
 				}
 
-				return res.then(
-					config => {
-						prev[item] = config;
+				return res.then(config => {
+					prev[item] = config;
 
-						var obj = config._paths.obj;
+					var obj = config._paths.obj;
 
-						if (obj) {
-							instance._configFiles[obj.filepath] = true;
-						}
-
-						return prev;
+					if (obj) {
+						instance._configFiles[obj.filepath] = true;
 					}
-				);
+
+					return prev;
+				});
 			},
 			{}
 		);
@@ -366,11 +352,11 @@ class CLI extends EventEmitter {
 
 				if (configSize === 1) {
 					msg = `Using local config from ${configFiles[0]}`;
-				}
-				else if (this.flags.verbose) {
-					msg = `Using local config from: \n${configFiles.join('\n')}`;
-				}
-				else {
+				} else if (this.flags.verbose) {
+					msg = `Using local config from: \n${configFiles.join(
+						'\n'
+					)}`;
+				} else {
 					msg = `Using local config from ${configSize} files. Pass -v to see all locations`;
 				}
 
@@ -387,11 +373,11 @@ class CLI extends EventEmitter {
 		this._notifyConfig();
 
 		return Promise.all(this._args)
-				.bind(this)
-				.mapSeries(_.unary(this.processFile))
-				.then(this.checkMeta)
-				.then(this.createReport)
-				.then(this.afterFormat);
+			.bind(this)
+			.mapSeries(_.unary(this.processFile))
+			.then(this.checkMeta)
+			.then(this.createReport)
+			.then(this.afterFormat);
 	}
 }
 

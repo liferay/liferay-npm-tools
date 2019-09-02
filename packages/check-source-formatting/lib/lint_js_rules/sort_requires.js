@@ -2,11 +2,13 @@ module.exports = context => ({
 	Property(node) {
 		var nodeValue = node.value;
 
-		if (node.key.name == 'requires' && nodeValue.type == 'ArrayExpression') {
+		if (
+			node.key.name == 'requires' &&
+			nodeValue.type == 'ArrayExpression'
+		) {
 			var elements = nodeValue.elements;
 
 			if (elements.length > 1) {
-
 				// I really, really hate having two loops here,
 				// but I can't think of any way to check only strings
 				// in an array, allowing for the off chance of non-string values
@@ -16,30 +18,34 @@ module.exports = context => ({
 
 				var modules = [];
 
-				elements.forEach(
-					(item, index) => {
-						if (item.type == 'Literal' && typeof item.value === 'string') {
-							modules.push(item.value);
-						}
+				elements.forEach((item, index) => {
+					if (
+						item.type == 'Literal' &&
+						typeof item.value === 'string'
+					) {
+						modules.push(item.value);
 					}
-				);
+				});
 
 				var needsSort = [];
 
-				modules.forEach(
-					(item, index, collection) => {
-						if (index > 0) {
-							var prevValue = collection[index - 1];
+				modules.forEach((item, index, collection) => {
+					if (index > 0) {
+						var prevValue = collection[index - 1];
 
-							if (item < prevValue) {
-								needsSort.push(`${prevValue} > ${item}`);
-							}
+						if (item < prevValue) {
+							needsSort.push(`${prevValue} > ${item}`);
 						}
 					}
-				);
+				});
 
 				if (needsSort.length) {
-					context.report(node, `Sort modules in "requires" array: ${needsSort.join(', ')}`);
+					context.report(
+						node,
+						`Sort modules in "requires" array: ${needsSort.join(
+							', '
+						)}`
+					);
 				}
 			}
 		}

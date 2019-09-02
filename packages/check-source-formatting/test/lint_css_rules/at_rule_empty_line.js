@@ -22,21 +22,19 @@ var ruleName = rule.ruleName;
 
 rule = rule.rule;
 
-testRule(
-	rule,
-	{
-		ruleName: ruleName,
-		config: ['always', {except: ['first-nested']}],
-		accept: [
-			{
-				code: `a {
+testRule(rule, {
+	ruleName: ruleName,
+	config: ['always', {except: ['first-nested']}],
+	accept: [
+		{
+			code: `a {
 					@include foo;
 					color: pink;
 				}`,
-				description: 'always at rule empty line no first-nested'
-			},
-			{
-				code: `
+			description: 'always at rule empty line no first-nested'
+		},
+		{
+			code: `
 					@if $foo != null {
 						div {
 							color: blue;
@@ -48,33 +46,29 @@ testRule(
 						}
 					}
 				`,
-				description: 'ignore @else blocks'
-			}
-		],
-		reject: [
-			{
-				code: `a {
+			description: 'ignore @else blocks'
+		}
+	],
+	reject: [
+		{
+			code: `a {
 					color: blue;
 					@include foo;
 				}`,
-				message: stylelintRule.messages.expected
-			}
-		],
-		syntax: 'scss',
-	}
-);
+			message: stylelintRule.messages.expected
+		}
+	],
+	syntax: 'scss'
+});
 
-testRule(
-	rule,
-	{
-		description: 'should handle invalid options',
-		config: [],
-		skipBasicChecks: true,
-		reject: [
-			{
-				code: 'a {\n}',
-				message: 'Expected option value for rule "' + ruleName + '"'
-			}
-		],
-	}
-);
+testRule(rule, {
+	description: 'should handle invalid options',
+	config: [],
+	skipBasicChecks: true,
+	reject: [
+		{
+			code: 'a {\n}',
+			message: 'Expected option value for rule "' + ruleName + '"'
+		}
+	]
+});

@@ -2,25 +2,18 @@
 
 var x = 'foo';
 
-if(foo){
+if (foo) {
 	alert('foo');
 } else {
 	alert('else');
 }
 
-foo({
+foo({});
 
-});
-
-foo(
-	function () {
-
-	}
-);
+foo(function() {});
 
 console.log('foo');
 
 var something = 'foo';
 if (something) {
-
 }

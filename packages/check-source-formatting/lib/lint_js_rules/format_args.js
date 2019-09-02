@@ -5,7 +5,8 @@ var sub = require('string-sub');
 module.exports = context => {
 	var isFunctionExpression = type => _.endsWith(type, 'FunctionExpression');
 
-	var isCallable = type => isFunctionExpression(type) || type === 'CallExpression';
+	var isCallable = type =>
+		isFunctionExpression(type) || type === 'CallExpression';
 
 	var getAnonymousFnName = fnName => {
 		if (!fnName) {
@@ -24,22 +25,19 @@ module.exports = context => {
 		}
 
 		if (node.arguments && node.arguments.length) {
-			node.arguments.forEach(
-				(item, index) => {
-					var type = item.type;
+			node.arguments.forEach((item, index) => {
+				var type = item.type;
 
-					if (isCallable(type)) {
-						var argLineBounds = getFnLines(item);
+				if (isCallable(type)) {
+					var argLineBounds = getFnLines(item);
 
-						start = Math.min(argLineBounds.start, start);
-						end = Math.max(argLineBounds.end, end);
-					}
-					else {
-						start = item.loc.start.line;
-						end = item.loc.end.line;
-					}
+					start = Math.min(argLineBounds.start, start);
+					end = Math.max(argLineBounds.end, end);
+				} else {
+					start = item.loc.start.line;
+					end = item.loc.end.line;
 				}
-			);
+			});
 		}
 
 		lineBounds.end = end;
@@ -58,14 +56,13 @@ module.exports = context => {
 
 			if (isCallable(type)) {
 				lineBounds = getFnExpLines(lineBounds, node);
-			}
-			else if (type === 'MemberExpression') {
+			} else if (type === 'MemberExpression') {
 				lineBounds.end = getLineBounds(node, 'end');
 				lineBounds.start = getLineBounds(callee, 'end');
 			}
 		}
 
-		lineBounds.multi = (lineBounds.end > lineBounds.start);
+		lineBounds.multi = lineBounds.end > lineBounds.start;
 
 		return lineBounds;
 	};
@@ -81,11 +78,9 @@ module.exports = context => {
 
 		if (isFunctionExpression(type)) {
 			fnName = getAnonymousFnName(fnName);
-		}
-		else if (type === 'MemberExpression') {
+		} else if (type === 'MemberExpression') {
 			fnName = getMethodName(callee);
-		}
-		else if (type === 'CallExpression') {
+		} else if (type === 'CallExpression') {
 			fnName = callee.callee.name;
 		}
 
@@ -125,10 +120,11 @@ module.exports = context => {
 
 		if (options.multi) {
 			if (argStart === fnStart) {
-				error = 'Args should each be on their own line (args on start line)';
-			}
-			else if (argStart === fnStart || argEnd === fnEnd) {
-				error = 'Args should each be on their own line (args on end line)';
+				error =
+					'Args should each be on their own line (args on start line)';
+			} else if (argStart === fnStart || argEnd === fnEnd) {
+				error =
+					'Args should each be on their own line (args on end line)';
 			}
 		}
 
@@ -167,43 +163,48 @@ module.exports = context => {
 
 		var error = '';
 
-		args.forEach(
-			(item, index) => {
-				var type = item.type;
+		args.forEach((item, index) => {
+			var type = item.type;
 
-				var loc = getLineBounds(item.loc);
+			var loc = getLineBounds(item.loc);
 
-				var argStart = loc.start;
-				var argEnd = loc.end;
+			var argStart = loc.start;
+			var argEnd = loc.end;
 
-				argLineEnds.push(argEnd);
-				argLineStarts.push(argStart);
+			argLineEnds.push(argEnd);
+			argLineStarts.push(argStart);
 
-				if (type === 'FunctionExpression' && item.body.body.length) {
-					hasNonEmptyFunctionArg = true;
-				}
-				else if (type === 'ObjectExpression' && item.properties.length && _.findIndex(item.properties, ['shorthand', true]) === -1) {
-					hasNonEmptyObjectArg = true;
-				}
-
-				error = getMultiLineError(error, loc, options);
-
-				if (argStart === lastArgStartLine || argStart === lastArgEndLine) {
-					testLineEndings = true;
-				}
-
-				lastArgEndLine = argEnd;
-				lastArgStartLine = argStart;
+			if (type === 'FunctionExpression' && item.body.body.length) {
+				hasNonEmptyFunctionArg = true;
+			} else if (
+				type === 'ObjectExpression' &&
+				item.properties.length &&
+				_.findIndex(item.properties, ['shorthand', true]) === -1
+			) {
+				hasNonEmptyObjectArg = true;
 			}
-		);
+
+			error = getMultiLineError(error, loc, options);
+
+			if (argStart === lastArgStartLine || argStart === lastArgEndLine) {
+				testLineEndings = true;
+			}
+
+			lastArgEndLine = argEnd;
+			lastArgStartLine = argStart;
+		});
 
 		if (testLineEndings) {
 			var argLines = argLineStarts.concat(argLineEnds);
 
-			if (hasNonEmptyFunctionArg || hasNonEmptyObjectArg || _.uniq(argLines).length > 1) {
-				error = 'Args should each be on their own line (args on same line)';
-			}
-			else if (multiLineFn) {
+			if (
+				hasNonEmptyFunctionArg ||
+				hasNonEmptyObjectArg ||
+				_.uniq(argLines).length > 1
+			) {
+				error =
+					'Args should each be on their own line (args on same line)';
+			} else if (multiLineFn) {
 				error = 'Function call can be all on one line';
 			}
 		}
@@ -222,9 +223,11 @@ module.exports = context => {
 
 			if (node.arguments.length) {
 				logArgError(fnLines, fnName, node);
-			}
-			else if (fnLines.multi) {
-				var message = sub('Function call without arguments should be on one line: {0}()', fnName);
+			} else if (fnLines.multi) {
+				var message = sub(
+					'Function call without arguments should be on one line: {0}()',
+					fnName
+				);
 
 				context.report(node, message);
 			}

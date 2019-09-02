@@ -22,7 +22,7 @@ ruleTester.run(
 		invalid: [
 			{
 				code: 'var a = b;',
-				errors: [ { message: "'b' is not defined." } ]
+				errors: [{message: "'b' is not defined."}]
 			}
 		]
 	}

@@ -5,7 +5,7 @@ require('./css');
 require('./html');
 require('./js');
 
-var Formatter = module.exports = require('content-formatter');
+var Formatter = (module.exports = require('content-formatter'));
 
 var Config = require('./config');
 var re = require('./re');
@@ -52,8 +52,7 @@ Formatter.prototype.config = function(key) {
 			configObj = _.merge(...filteredConfigs);
 
 			delete configObj._paths;
-		}
-		else {
+		} else {
 			configObj = config;
 		}
 
@@ -63,22 +62,16 @@ Formatter.prototype.config = function(key) {
 	return configObj(key);
 };
 
-Formatter.on(
-	'init',
-	instance => {
-		instance._config = new Config();
+Formatter.on('init', instance => {
+	instance._config = new Config();
 
-		var ruleInstance = new re(RULES);
+	var ruleInstance = new re(RULES);
 
-		instance._re = ruleInstance;
+	instance._re = ruleInstance;
 
-		instance.proxyEvent('message', ['re'], ruleInstance);
+	instance.proxyEvent('message', ['re'], ruleInstance);
 
-		instance.on(
-			're:message',
-			data => {
-				instance.log(data.context.lineNum, data.message);
-			}
-		);
-	}
-);
+	instance.on('re:message', data => {
+		instance.log(data.context.lineNum, data.message);
+	});
+});

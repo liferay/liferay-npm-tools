@@ -25,8 +25,7 @@ module.exports = context => ({
 					if (leadingSpace) {
 						endIndex = index + 1;
 						surroundingSpaceTypes.push('leading');
-					}
-					else {
+					} else {
 						startIndex = index + 1;
 						surroundingSpaceTypes.push('trailing');
 						brackets.push('...');
@@ -42,7 +41,11 @@ module.exports = context => ({
 
 			brackets = _.uniq(brackets);
 
-			var message = sub('Remove {0} spaces: {1}', surroundingSpaceTypes.join(' and '), brackets.join(' '));
+			var message = sub(
+				'Remove {0} spaces: {1}',
+				surroundingSpaceTypes.join(' and '),
+				brackets.join(' ')
+			);
 
 			context.report(node, message);
 		}

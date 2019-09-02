@@ -35,15 +35,10 @@ var loadPlugin = (pluginName, configPath) => {
 
 		try {
 			rules = require(pluginName).rules;
-		}
-		catch (e) {
-		}
+		} catch (e) {}
 
 		if (rules) {
-			rules = _.mapKeys(
-				rules,
-				(item, index) => `${baseName}/${index}`
-			);
+			rules = _.mapKeys(rules, (item, index) => `${baseName}/${index}`);
 
 			eslint.linter.defineRules(rules);
 		}
@@ -79,17 +74,15 @@ var runLinter = (contents, file, context) => {
 		configs.push(config);
 	}
 
-	configs.push(
-		(objValue, srcValue, key) => {
-			var retVal;
+	configs.push((objValue, srcValue, key) => {
+		var retVal;
 
-			if (key === 'plugins' && _.isArray(objValue) && _.isArray(srcValue)) {
-				retVal = objValue.concat(srcValue);
-			}
-
-			return retVal;
+		if (key === 'plugins' && _.isArray(objValue) && _.isArray(srcValue)) {
+			retVal = objValue.concat(srcValue);
 		}
-	);
+
+		return retVal;
+	});
 
 	config = _.mergeWith(...configs);
 
@@ -100,11 +93,9 @@ var runLinter = (contents, file, context) => {
 			configPath = path.dirname(configPath);
 		}
 
-		config.plugins.forEach(
-			(item, index) => {
-				loadPlugin(item, configPath);
-			}
-		);
+		config.plugins.forEach((item, index) => {
+			loadPlugin(item, configPath);
+		});
 	}
 
 	var originalGlobals = config.globals;
@@ -112,7 +103,10 @@ var runLinter = (contents, file, context) => {
 	var importedAliases = config.importedAliases;
 
 	if (importedAliases) {
-		var newGlobals = _.zipObject(importedAliases, _.times(importedAliases.length, _.stubTrue));
+		var newGlobals = _.zipObject(
+			importedAliases,
+			_.times(importedAliases.length, _.stubTrue)
+		);
 
 		config.globals = _.assign({}, originalGlobals, newGlobals);
 	}
@@ -144,16 +138,11 @@ var globOptions = {
 module.exports = (contents, file, context) => {
 	context.customRules = customRules;
 
-	glob.sync(
-		'./lint_js_rules/*.js',
-		globOptions
-	).forEach(
-		(item, index) => {
-			var id = ruleUtils.getRuleId(item);
+	glob.sync('./lint_js_rules/*.js', globOptions).forEach((item, index) => {
+		var id = ruleUtils.getRuleId(item);
 
-			customRules[id] = require(item);
-		}
-	);
+		customRules[id] = require(item);
+	});
 
 	// eslint.linter.defineRules(customRules);
 

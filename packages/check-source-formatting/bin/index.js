@@ -13,23 +13,19 @@ if (notifier.update) {
 	notifier.notify();
 }
 
-var config = new ConfigStore(
-	pkg.name,
-	{
-		lastPackageVersion: pkg.version,
-		lastUpdateCheck: Date.now()
-	}
-);
+var config = new ConfigStore(pkg.name, {
+	lastPackageVersion: pkg.version,
+	lastUpdateCheck: Date.now()
+});
 
-var cli = require('../lib/cli').init().then(
-	function(results) {
-		var deprecated = deprecationCheck(
-			{
-				config,
-				pkg,
-				scriptName: process.argv[1]
-			}
-		);
+var cli = require('../lib/cli')
+	.init()
+	.then(function(results) {
+		var deprecated = deprecationCheck({
+			config,
+			pkg,
+			scriptName: process.argv[1]
+		});
 
 		if (deprecated) {
 			console.log(deprecated);
@@ -38,5 +34,4 @@ var cli = require('../lib/cli').init().then(
 		if (results.EXIT_WITH_FAILURE === true) {
 			process.exitCode = 1;
 		}
-	}
-);
+	});

@@ -12,8 +12,8 @@ module.exports = {
 		}
 
 		var lintRules = {
-			'ReturnStatement': useInstance,
-			'VariableDeclaration': useInstance
+			ReturnStatement: useInstance,
+			VariableDeclaration: useInstance
 		};
 
 		var options = context.options;
@@ -29,8 +29,8 @@ module.exports = {
 				},
 				options: [
 					{
-						'args': 'none',
-						'vars': 'local'
+						args: 'none',
+						vars: 'local'
 					}
 				]
 			};
@@ -42,30 +42,35 @@ module.exports = {
 			lintRules['Program:exit'] = node => {
 				noUnused(mockContext)['Program:exit'](node);
 
-				collectedReport.forEach(
-					(item, index) => {
-						var declaration = item.node;
-						var name = declaration.name;
+				collectedReport.forEach((item, index) => {
+					var declaration = item.node;
+					var name = declaration.name;
 
-						var namespacedVar = STUB_RE.test(name);
+					var namespacedVar = STUB_RE.test(name);
 
-						var namespacedFn = false;
+					var namespacedFn = false;
 
-						if (namespacedVar) {
-							var parentType = declaration.parent.type;
+					if (namespacedVar) {
+						var parentType = declaration.parent.type;
 
-							if (parentType === 'FunctionDeclaration' ||
-								(parentType === 'VariableDeclarator' && declaration.parent.init && declaration.parent.init.type === 'FunctionExpression')
-							) {
-								namespacedFn = true;
-							}
-						}
-
-						if (!stubs[name] && !namespacedVar || (namespacedVar && !namespacedFn)) {
-							context.report(item);
+						if (
+							parentType === 'FunctionDeclaration' ||
+							(parentType === 'VariableDeclarator' &&
+								declaration.parent.init &&
+								declaration.parent.init.type ===
+									'FunctionExpression')
+						) {
+							namespacedFn = true;
 						}
 					}
-				);
+
+					if (
+						(!stubs[name] && !namespacedVar) ||
+						(namespacedVar && !namespacedFn)
+					) {
+						context.report(item);
+					}
+				});
 			};
 		}
 

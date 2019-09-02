@@ -38,7 +38,7 @@ var REGEX = {
 
 	VAR_IS: /^_?is[A-Z]/,
 
-	REPLACE_HEX_REDUNDANT: '#$1$2$3',
+	REPLACE_HEX_REDUNDANT: '#$1$2$3'
 };
 
 module.exports = REGEX;

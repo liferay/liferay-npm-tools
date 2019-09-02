@@ -8,7 +8,10 @@ module.exports = context => ({
 		var shouldEnd = start + 1;
 
 		if (!node.body.body.length && end != shouldEnd) {
-			var message = sub('Empty catch statement should be closed on line {0}', shouldEnd);
+			var message = sub(
+				'Empty catch statement should be closed on line {0}',
+				shouldEnd
+			);
 
 			context.report(node, message);
 		}

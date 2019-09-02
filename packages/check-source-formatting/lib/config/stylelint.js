@@ -1,14 +1,9 @@
 module.exports = {
+	plugins: ['stylelint-order'],
 
-	'plugins': [
-		'stylelint-order'
-	],
+	globals: {},
 
-	'globals': {
-
-	},
-
-	'rules': {
+	rules: {
 		// 'at-rule-blacklist': 'string|[]',
 		// 'at-rule-empty-line-before': 'alwaysd|never',
 		'at-rule-name-case': 'lower',
@@ -133,7 +128,7 @@ module.exports = {
 
 		// 'function-whitelist': '',
 		'function-whitespace-after': 'always',
-		'indentation': 'tab',
+		indentation: 'tab',
 		'max-empty-lines': 1,
 		// 'max-line-length': int,
 		// 'max-nesting-depth': int,

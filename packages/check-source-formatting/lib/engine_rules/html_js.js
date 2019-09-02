@@ -4,7 +4,8 @@ module.exports = {
 		regex: /Liferay\.Language\.get/
 	},
 	liferayProvide: {
-		message: 'You can\'t have a Liferay.provide call in a script taglib that has a "use" attribute',
+		message:
+			'You can\'t have a Liferay.provide call in a script taglib that has a "use" attribute',
 		regex: /Liferay\.provide/,
 		test(content, regex, rule, context) {
 			return context.asyncAUIScript && this.test(content, regex);

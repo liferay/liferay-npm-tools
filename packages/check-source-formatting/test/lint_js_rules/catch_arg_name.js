@@ -11,14 +11,14 @@ ruleTester.run(
 	path.basename(__filename, '.js'),
 	require('../../lib/lint_js_rules/' + path.basename(__filename)),
 	{
-		valid: [
-			'try{}catch(e){}'
-		],
+		valid: ['try{}catch(e){}'],
 
 		invalid: [
 			{
 				code: 'try{}catch(err){}',
-				errors: [ { message: 'Catch statement param should be "e", not "err"' } ]
+				errors: [
+					{message: 'Catch statement param should be "e", not "err"'}
+				]
 			}
 		]
 	}

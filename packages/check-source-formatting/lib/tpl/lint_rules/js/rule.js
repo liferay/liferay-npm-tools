@@ -19,11 +19,9 @@ module.exports = {
 
 	create(context) {
 		return {
-
 			// ReturnStatement: function(node) {
 			// ....
 			// }
-
 		};
 	}
 };

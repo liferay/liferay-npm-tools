@@ -25,8 +25,7 @@ module.exports = context => {
 
 		if (type === 'Literal' || type === 'Identifier') {
 			propName = obj.name || obj.value;
-		}
-		else {
+		} else {
 			propName = context.getSourceCode().getText(obj);
 		}
 
@@ -35,24 +34,35 @@ module.exports = context => {
 
 	var sourceCode = context.getSourceCode();
 
-	var getComputedPropertyName = obj => sourceCode.getTokenBefore(obj).value + sourceCode.getText(obj) + sourceCode.getTokenAfter(obj).value;
+	var getComputedPropertyName = obj =>
+		sourceCode.getTokenBefore(obj).value +
+		sourceCode.getText(obj) +
+		sourceCode.getTokenAfter(obj).value;
 
 	var inAttrs = parent => {
 		var insideAttrs = false;
 
 		var grandParent = parent && parent.parent;
 
-		if (grandParent && grandParent.type === 'Property' && grandParent.key.name === 'ATTRS') {
+		if (
+			grandParent &&
+			grandParent.type === 'Property' &&
+			grandParent.key.name === 'ATTRS'
+		) {
 			insideAttrs = true;
 		}
 
 		return insideAttrs;
 	};
 
-	var isFunctionExpression = obj => obj.type === 'FunctionExpression' || obj.type === 'ArrowFunctionExpression';
+	var isFunctionExpression = obj =>
+		obj.type === 'FunctionExpression' ||
+		obj.type === 'ArrowFunctionExpression';
 
 	var isLifecycle = _.memoize(
-		(propName, prevPropName) => LIFECYCLE_METHODS.hasOwnProperty(propName) || LIFECYCLE_METHODS.hasOwnProperty(prevPropName),
+		(propName, prevPropName) =>
+			LIFECYCLE_METHODS.hasOwnProperty(propName) ||
+			LIFECYCLE_METHODS.hasOwnProperty(prevPropName),
 		getCacheKey
 	);
 
@@ -61,17 +71,14 @@ module.exports = context => {
 		getCacheKey
 	);
 
-	var isMatchingType = (item, prev) => isFunctionExpression(prev.value) === isFunctionExpression(item.value);
+	var isMatchingType = (item, prev) =>
+		isFunctionExpression(prev.value) === isFunctionExpression(item.value);
 
-	var isPrivate = _.memoize(
-		str => _.isString(str) && str.charAt(0) === '_'
-	);
+	var isPrivate = _.memoize(str => _.isString(str) && str.charAt(0) === '_');
 
 	var RE_UPPER = /^[^a-z]+$/;
 
-	var isUpper = _.memoize(
-		str => RE_UPPER.test(str)
-	);
+	var isUpper = _.memoize(str => RE_UPPER.test(str));
 
 	var naturalCompare = ruleUtils.naturalCompare;
 
@@ -79,53 +86,103 @@ module.exports = context => {
 
 	var caseSensitive = configuration.casesensitive;
 
-	var checkLifecyleSort = (needsSort, propName, prevPropName, item, prev, parent) => {
+	var checkLifecyleSort = (
+		needsSort,
+		propName,
+		prevPropName,
+		item,
+		prev,
+		parent
+	) => {
 		var customPrevPropName = LIFECYCLE_METHODS[prevPropName];
 		var customPropName = LIFECYCLE_METHODS[propName];
 
 		if (customPropName) {
 			if (customPrevPropName) {
 				needsSort = customPropName < customPrevPropName;
-			}
-			else {
-				needsSort = (!isUpper(prevPropName) && isFunctionExpression(prev.value));
+			} else {
+				needsSort =
+					!isUpper(prevPropName) && isFunctionExpression(prev.value);
 			}
 		}
 
 		return needsSort;
 	};
 
-	var checkRegPropSort = (needsSort, propName, prevPropName, item, prev, caseSensitive, parent) => {
+	var checkRegPropSort = (
+		needsSort,
+		propName,
+		prevPropName,
+		item,
+		prev,
+		caseSensitive,
+		parent
+	) => {
 		var privatePrevProp = isPrivate(prevPropName);
 		var privateProp = isPrivate(propName);
 
-		needsSort = (privateProp === privatePrevProp) && isMatchingCase(propName, prevPropName) && naturalCompare(propName, prevPropName, !caseSensitive) === -1 && isMatchingType(item, prev);
+		needsSort =
+			privateProp === privatePrevProp &&
+			isMatchingCase(propName, prevPropName) &&
+			naturalCompare(propName, prevPropName, !caseSensitive) === -1 &&
+			isMatchingType(item, prev);
 
-		if (privateProp !== privatePrevProp && privatePrevProp && !privateProp) {
+		if (
+			privateProp !== privatePrevProp &&
+			privatePrevProp &&
+			!privateProp
+		) {
 			needsSort = true;
 		}
 
-		if (needsSort && !isFunctionExpression(item.value) && !inAttrs(parent)) {
-
+		if (
+			needsSort &&
+			!isFunctionExpression(item.value) &&
+			!inAttrs(parent)
+		) {
 			// Allow a set of properties to be grouped with an extra newline
 
-			needsSort = (item.loc.start.line - prev.loc.end.line) < 2;
+			needsSort = item.loc.start.line - prev.loc.end.line < 2;
 		}
 
 		return needsSort;
 	};
 
-	var checkSort = (propName, prevPropName, item, prev, caseSensitive, parent) => {
+	var checkSort = (
+		propName,
+		prevPropName,
+		item,
+		prev,
+		caseSensitive,
+		parent
+	) => {
 		var needsSort = false;
 
 		if (isLifecycle(propName, prevPropName)) {
-			needsSort = checkLifecyleSort(needsSort, propName, prevPropName, item, prev, parent);
-		}
-		else {
-			needsSort = checkRegPropSort(needsSort, propName, prevPropName, item, prev, caseSensitive, parent);
+			needsSort = checkLifecyleSort(
+				needsSort,
+				propName,
+				prevPropName,
+				item,
+				prev,
+				parent
+			);
+		} else {
+			needsSort = checkRegPropSort(
+				needsSort,
+				propName,
+				prevPropName,
+				item,
+				prev,
+				caseSensitive,
+				parent
+			);
 		}
 
-		if (REGEX.SERVICE_PROPS.test(propName) || REGEX.SERVICE_PROPS.test(prevPropName)) {
+		if (
+			REGEX.SERVICE_PROPS.test(propName) ||
+			REGEX.SERVICE_PROPS.test(prevPropName)
+		) {
 			needsSort = false;
 		}
 
@@ -136,37 +193,55 @@ module.exports = context => {
 		ObjectExpression(node) {
 			var prev = null;
 
-			node.properties.forEach(
-				(item, index, collection) => {
-					if (index > 0 && item.type !== 'ExperimentalSpreadProperty' && prev.type !== 'ExperimentalSpreadProperty') {
-						var key = item.key;
-						var prevKey = prev.key;
+			node.properties.forEach((item, index, collection) => {
+				if (
+					index > 0 &&
+					item.type !== 'ExperimentalSpreadProperty' &&
+					prev.type !== 'ExperimentalSpreadProperty'
+				) {
+					var key = item.key;
+					var prevKey = prev.key;
 
-						var prevPropName = getPropName(prevKey);
-						var propName = getPropName(key);
+					var prevPropName = getPropName(prevKey);
+					var propName = getPropName(key);
 
-						var needsSort = checkSort(propName, prevPropName, item, prev, caseSensitive, node);
+					var needsSort = checkSort(
+						propName,
+						prevPropName,
+						item,
+						prev,
+						caseSensitive,
+						node
+					);
 
-						if (needsSort) {
-							var note = isLifecycle(propName, prevPropName) ? ' (Lifecycle methods should come first)' : '';
+					if (needsSort) {
+						var note = isLifecycle(propName, prevPropName)
+							? ' (Lifecycle methods should come first)'
+							: '';
 
-							var displayPrevPropName = prevPropName;
-							var displayPropName = propName;
+						var displayPrevPropName = prevPropName;
+						var displayPropName = propName;
 
-							if (item.computed) {
-								displayPrevPropName = getComputedPropertyName(prevKey);
-								displayPropName = getComputedPropertyName(key);
-							}
-
-							var message = sub('Sort properties: {0} {1}{2}', displayPrevPropName, displayPropName, note);
-
-							context.report(item, message);
+						if (item.computed) {
+							displayPrevPropName = getComputedPropertyName(
+								prevKey
+							);
+							displayPropName = getComputedPropertyName(key);
 						}
-					}
 
-					prev = item;
+						var message = sub(
+							'Sort properties: {0} {1}{2}',
+							displayPrevPropName,
+							displayPropName,
+							note
+						);
+
+						context.report(item, message);
+					}
 				}
-			);
+
+				prev = item;
+			});
 		}
 	};
 };

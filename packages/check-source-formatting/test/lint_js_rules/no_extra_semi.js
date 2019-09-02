@@ -11,12 +11,13 @@ ruleTester.run(
 	path.basename(__filename, '.js'),
 	require('../../lib/lint_js_rules/' + path.basename(__filename)),
 	{
-		valid: [
-			';(function(){});'
-		],
+		valid: [';(function(){});'],
 
 		invalid: [
-			{ code: ';;(function(){});', errors: [{ message: 'Unnecessary semicolon.'}] }
+			{
+				code: ';;(function(){});',
+				errors: [{message: 'Unnecessary semicolon.'}]
+			}
 		]
 	}
 );

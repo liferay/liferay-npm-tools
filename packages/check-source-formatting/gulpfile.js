@@ -7,17 +7,19 @@ var runSequence = require('run-sequence');
 var inquirer = require('inquirer');
 
 gulp.task('coveralls', () => {
-	gulp.src('coverage/**/lcov.info')
-		.pipe(plugins.coveralls());
+	gulp.src('coverage/**/lcov.info').pipe(plugins.coveralls());
 });
 
 gulp.task('test', done => runSequence('test-unit', done));
 
-gulp.task('test-complexity', () => gulp.src(['lib/**/*.js'])
-	.pipe(plugins.complexity({
-		cyclomatic: [4, 7, 12],
-		halstead: [15, 15, 20]
-	})));
+gulp.task('test-complexity', () =>
+	gulp.src(['lib/**/*.js']).pipe(
+		plugins.complexity({
+			cyclomatic: [4, 7, 12],
+			halstead: [15, 15, 20]
+		})
+	)
+);
 
 gulp.task('test-file', () => {
 	var file = process.argv.slice(3).pop();
@@ -28,120 +30,109 @@ gulp.task('test-file', () => {
 		file = !_.endsWith(file, '.js') ? `${file}.js` : file;
 
 		file = [file];
-	}
-	else {
+	} else {
 		file = ['test/**/*.js', '!test/fixture/*.js'];
 	}
 
-	return gulp.src(file)
-		// .pipe(plugins.debug())
-		.pipe(plugins.mocha(
-				{
+	return (
+		gulp
+			.src(file)
+			// .pipe(plugins.debug())
+			.pipe(
+				plugins.mocha({
 					'display-raw': true
-				}
+				})
 			)
-		);
+	);
 });
 
 gulp.task('test-unit', () => {
-	return gulp.src(['test/**/*.js', '!test/fixture/*.js'])
-		.pipe(plugins.mocha(
-				{
-					'display-raw': true
-				}
-			)
-		);
+	return gulp.src(['test/**/*.js', '!test/fixture/*.js']).pipe(
+		plugins.mocha({
+			'display-raw': true
+		})
+	);
 });
 
-gulp.task('test-cover', () => gulp.src(['lib/**/*.js'])
-	.pipe(plugins.istanbul())
-	.pipe(plugins.istanbul.hookRequire()));
+gulp.task('test-cover', () =>
+	gulp
+		.src(['lib/**/*.js'])
+		.pipe(plugins.istanbul())
+		.pipe(plugins.istanbul.hookRequire())
+);
 
 gulp.task('test-coverage', ['test-cover'], () => {
-	return gulp.src(['test/**/*.js', '!test/fixture/*.js'])
-		.pipe(plugins.mocha(
-				{
-					'display-raw': true
-				}
-			)
+	return gulp
+		.src(['test/**/*.js', '!test/fixture/*.js'])
+		.pipe(
+			plugins.mocha({
+				'display-raw': true
+			})
 		)
 		.pipe(plugins.istanbul.writeReports());
 });
 
 gulp.task('toc', done => {
 	gulp.src('./README.md')
-	.pipe(
-		plugins.doctoc(
-			{
+		.pipe(
+			plugins.doctoc({
 				title: '### Jump to Section',
 				depth: 2
-			}
+			})
 		)
-	)
-	.pipe(gulp.dest('./'));
+		.pipe(gulp.dest('./'));
 });
 
-gulp.task(
-	'new-rule',
-	done => {
-		inquirer.prompt(
-			[
-				{
-					type: 'list',
-					choices: ['ESLint'/*, 'Stylelint'*/],
-					message: 'What kind of linting rule do you wish to create?',
-					name: 'type'
-				},
-				{
-					type: 'input',
-					default: 'my-new-rule',
-					filter: _.snakeCase,
-					message: 'What do you want to name it?',
-					name: 'name'
-				},
-				{
-					type: 'input',
-					default: 'Checks for this issue.',
-					message: 'Type a short description',
-					name: 'description'
-				}
-			]
-		)
-		.then(
-			res => {
-				var srcDir = 'js';
-				var destDir = 'lint_js_rules';
+gulp.task('new-rule', done => {
+	inquirer
+		.prompt([
+			{
+				type: 'list',
+				choices: ['ESLint' /*, 'Stylelint'*/],
+				message: 'What kind of linting rule do you wish to create?',
+				name: 'type'
+			},
+			{
+				type: 'input',
+				default: 'my-new-rule',
+				filter: _.snakeCase,
+				message: 'What do you want to name it?',
+				name: 'name'
+			},
+			{
+				type: 'input',
+				default: 'Checks for this issue.',
+				message: 'Type a short description',
+				name: 'description'
+			}
+		])
+		.then(res => {
+			var srcDir = 'js';
+			var destDir = 'lint_js_rules';
 
-				if (res.type !== 'ESLint') {
-					srcDir = 'css';
-					destDir = 'lint_css_rules';
-				}
+			if (res.type !== 'ESLint') {
+				srcDir = 'css';
+				destDir = 'lint_css_rules';
+			}
 
-				gulp.src(`./lib/tpl/lint_rules/${srcDir}/*.js`)
+			gulp.src(`./lib/tpl/lint_rules/${srcDir}/*.js`)
 				// .pipe(plugins.debug())
 				.pipe(
-					plugins.rename(
-						path => {
-							var baseDir = path.basename === 'rule' ? 'lib' : 'test';
+					plugins.rename(path => {
+						var baseDir = path.basename === 'rule' ? 'lib' : 'test';
 
-							path.dirname = `./${baseDir}/lint_${srcDir}_rules`;
+						path.dirname = `./${baseDir}/lint_${srcDir}_rules`;
 
-							path.basename = res.name;
-						}
-					)
+						path.basename = res.name;
+					})
 				)
 				.pipe(
-					plugins.template(
-						res,
-						{
-							interpolate: /<%=([\s\S]+?)%>/g
-						}
-					)
+					plugins.template(res, {
+						interpolate: /<%=([\s\S]+?)%>/g
+					})
 				)
 				.pipe(gulp.dest('./'));
 
-				done();
-			}
-		);
-	}
-);
+			done();
+		});
+});
