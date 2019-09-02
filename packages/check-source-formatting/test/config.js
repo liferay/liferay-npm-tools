@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var chai = require('chai');
 
 var Config = require('../lib/config');
@@ -29,7 +35,7 @@ describe('Config', function() {
 	it('should return property by key', function() {
 		var config = new Config({
 			foo: 1,
-			bar: function() {
+			bar() {
 				return 'hello world';
 			}
 		});
@@ -41,7 +47,7 @@ describe('Config', function() {
 	it('should return entire config when called without a key', function() {
 		var config = new Config({
 			foo: 1,
-			bar: function() {
+			bar() {
 				return 'hello world';
 			}
 		});

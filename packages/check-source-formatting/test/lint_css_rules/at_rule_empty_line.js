@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var path = require('path');
 var ruleUtils = require('../../lib/rule_utils');
 var testRule = require('../stylelint_rule_tester');
@@ -23,7 +29,7 @@ var ruleName = rule.ruleName;
 rule = rule.rule;
 
 testRule(rule, {
-	ruleName: ruleName,
+	ruleName,
 	config: ['always', {except: ['first-nested']}],
 	accept: [
 		{

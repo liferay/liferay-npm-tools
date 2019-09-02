@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var chai = require('chai');
 var fs = require('fs');
 var path = require('path');
@@ -57,7 +63,7 @@ describe('JUnit reporting', function() {
 			});
 
 		var reporter = new junit({
-			logger: logger
+			logger
 		});
 
 		return reporter.generate().then(function(results) {
@@ -117,7 +123,7 @@ describe('JUnit reporting', function() {
 		this.timeout(5000);
 
 		var reporter = new junit({
-			logger: logger
+			logger
 		});
 
 		return reporter.generate().then(function(results) {

@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var _ = require('lodash');
 var utils = require('../rule_utils');
 
@@ -57,7 +63,7 @@ module.exports = context => {
 	};
 
 	return {
-		'Program:exit': function() {
+		'Program:exit'() {
 			variables.reduce((prev, item, index) => {
 				var lineDistance = getLineDistance(prev, item);
 

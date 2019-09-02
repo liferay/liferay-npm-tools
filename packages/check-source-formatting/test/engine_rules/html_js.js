@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var chai = require('chai');
 
 chai.use(require('chai-string'));
@@ -17,7 +23,7 @@ describe('HTML JS Rule Engine Tests', function() {
 		var content = "Liferay.Language.get('foo');";
 
 		var context = {
-			content: content
+			content
 		};
 
 		var result = re.testContent(rule, context);
@@ -38,7 +44,7 @@ describe('HTML JS Rule Engine Tests', function() {
 
 		var context = {
 			asyncAUIScript: true,
-			content: content
+			content
 		};
 
 		var result = re.testContent(rule, context);

@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 module.exports = {
 	liferayLanguage: {
 		message: 'Do not use Liferay.Language.get() outside of .js files: {1}',

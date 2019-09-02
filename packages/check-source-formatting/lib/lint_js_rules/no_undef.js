@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var _ = require('lodash');
 
 var base = require('../base');
@@ -19,7 +25,7 @@ module.exports = context => {
 	});
 
 	return {
-		'Program:exit': function(node) {
+		'Program:exit'(node) {
 			noUndef(mockContext)['Program:exit'](node);
 
 			collectedReport.forEach((item, index) => {

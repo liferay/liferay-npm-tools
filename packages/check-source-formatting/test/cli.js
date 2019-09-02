@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var _ = require('lodash');
 var chai = require('chai');
 var fs = require('fs');
@@ -63,7 +69,7 @@ describe('CLI', function() {
 		var cliInstance = new cli.CLI({
 			args: ['foo.js', 'bar.html', 'baz.css'],
 			log: _.noop,
-			logger: logger
+			logger
 		});
 
 		return cliInstance.init().then(function() {
@@ -99,7 +105,7 @@ describe('CLI', function() {
 			flags: {
 				inlineEdit: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -210,7 +216,7 @@ describe('CLI', function() {
 		var cliInstance = new cli.CLI({
 			args: ['./test/**/*/*.css', 'bar.html', 'baz.css'],
 			log: _.noop,
-			logger: logger
+			logger
 		});
 
 		return cliInstance.init().then(function() {
@@ -224,7 +230,7 @@ describe('CLI', function() {
 		var cliInstance = new cli.CLI({
 			args: ['./test/*/*.css', 'bar.html', 'baz.css'],
 			log: _.noop,
-			logger: logger
+			logger
 		});
 
 		return cliInstance.init().then(function() {
@@ -301,7 +307,7 @@ describe('CLI', function() {
 
 		var cliInstance = new cli.CLI({
 			args: ['foo.js'],
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -339,8 +345,8 @@ describe('CLI', function() {
 				config: false,
 				verbose: true
 			},
-			log: log,
-			logger: logger
+			log,
+			logger
 		});
 
 		return cliInstance.init().then(function() {
@@ -365,11 +371,11 @@ describe('CLI', function() {
 		var args = ['foo.js', 'bar.html', 'baz.css'];
 
 		var cliInstance = new cli.CLI({
-			args: args,
+			args,
 			flags: {
 				filenames: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -410,7 +416,7 @@ describe('CLI', function() {
 				filenames: true,
 				relative: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -434,7 +440,7 @@ describe('CLI', function() {
 
 		var cliInstance = new cli.CLI({
 			args: ['foo.js'],
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -467,7 +473,7 @@ describe('CLI', function() {
 			flags: {
 				inlineEdit: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -495,7 +501,7 @@ describe('CLI', function() {
 
 		var cliInstance = new cli.CLI({
 			args: ['./'],
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -518,7 +524,7 @@ describe('CLI', function() {
 
 		var cliInstance = new cli.CLI({
 			args: [],
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -553,7 +559,7 @@ describe('CLI', function() {
 			flags: {
 				open: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -591,7 +597,7 @@ describe('CLI', function() {
 			flags: {
 				open: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -626,8 +632,8 @@ describe('CLI', function() {
 				// config: false,
 				quiet: true
 			},
-			log: log,
-			logger: logger
+			log,
+			logger
 		});
 
 		var spy = sinon.spy(cliInstance, '_loadConfigs');
@@ -681,7 +687,7 @@ describe('CLI', function() {
 				failOnErrors: true
 			},
 			log: _.noop,
-			logger: logger
+			logger
 		});
 
 		return cliInstance.init().then(function(results) {
@@ -702,9 +708,9 @@ describe('CLI', function() {
 			flags: {
 				verbose: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor(),
-			read: function() {
+			read() {
 				return new Promise(function(resolve, reject) {
 					resolve('');
 				});
@@ -736,7 +742,7 @@ describe('CLI', function() {
 			flags: {
 				filenames: true
 			},
-			log: log,
+			log,
 			logger: new Logger.constructor()
 		});
 
@@ -802,10 +808,10 @@ describe('CLI', function() {
 			var log = sinon.spy();
 
 			var cfg = _.defaults(item.config, {
-				cwd: cwd,
-				log: log,
+				cwd,
+				log,
 				logger: new Logger.constructor(),
-				read: read
+				read
 			});
 
 			var cliInstance = new cli.CLI(cfg);

@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var chai = require('chai');
 var _ = require('lodash');
 
@@ -20,7 +26,7 @@ describe('HTML Rule Engine Tests', function() {
 
 		_.forEach(tests, function(content, index) {
 			var context = {
-				content: content
+				content
 			};
 
 			var result = re.testContent(rule, context);

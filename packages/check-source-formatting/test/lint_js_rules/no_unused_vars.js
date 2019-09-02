@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var path = require('path');
 
 var lint = require('../../lib/lint_js');
@@ -17,15 +23,15 @@ ruleTester.run(
 			'var _PN_xyz = 1;',
 			{
 				code: '(function(){ var _PN_xyz = function(){}; });',
-				options: options
+				options
 			},
 			{
 				code: '(function(){ function _PN_xyz(){} })',
-				options: options
+				options
 			},
 			{
 				code: '(function(){ function _SCRIPTLET_xyz(){} })',
-				options: options
+				options
 			}
 		],
 
@@ -35,11 +41,11 @@ ruleTester.run(
 				errors: [
 					{message: "'_PN_xyz' is assigned a value but never used."}
 				],
-				options: options
+				options
 			},
 			{
 				code: 'var OSBForm_EL_EXPRESSION_13;',
-				options: options,
+				options,
 				parserOptions: {
 					sourceType: 'module'
 				},

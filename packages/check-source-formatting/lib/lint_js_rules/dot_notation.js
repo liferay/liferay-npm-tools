@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var REGEX = require('../regex');
 
 var dotNotation = require('eslint/lib/rules/dot-notation');

@@ -1,3 +1,9 @@
+/**
+ * © 2019 Liferay, Inc. <https://liferay.com>
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 var _ = require('lodash');
 var stylelint = require('stylelint');
 
@@ -82,14 +88,14 @@ var plugin = stylelint.createPlugin(ruleName, (options, secondaryOptions) => {
 				{
 					ruleName: 'at-rule-empty-line-before',
 					ruleSettings: [options, secondaryOptions],
-					root: root
+					root
 				},
 				warning => {
 					if (!_.includes(validLines, warning.line)) {
 						stylelint.utils.report({
 							message: warning.text,
-							ruleName: ruleName,
-							result: result,
+							ruleName,
+							result,
 							node: warning.node,
 							line: warning.line,
 							column: warning.column
