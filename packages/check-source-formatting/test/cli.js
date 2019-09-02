@@ -746,27 +746,6 @@ describe('CLI', function() {
 		});
 	});
 
-	it('should handle invalid config', function() {
-		sinon.stub(fs, 'readFile').callsArgWith(2, null, '');
-
-		var log = sinon.spy();
-
-		var filePath = path.join(__dirname, 'fixture/config/bad_config/foo.js');
-
-		var cliInstance = new cli.CLI({
-			args: [filePath],
-			log: log,
-			logger: new Logger.constructor(),
-			read: function() {
-				return Promise.resolve('');
-			}
-		});
-
-		return cliInstance.init().then(function() {
-			assert.lengthOf(Object.keys(cliInstance._configs[filePath]), 0);
-		});
-	});
-
 	it('should handle config logging', function() {
 		var read = function(file, options) {
 			var retVal;
@@ -834,30 +813,6 @@ describe('CLI', function() {
 			return cliInstance.init().then(function() {
 				assert.equal(log.args[0][0], item.msg);
 			});
-		});
-	});
-
-	it('should not load a config when config is false', function() {
-		sinon.stub(fs, 'readFile').callsFake(invalidContentStub);
-
-		var log = sinon.spy();
-
-		var cliInstance = new cli.CLI({
-			args: ['foo.js'],
-			cwd: path.join(__dirname, 'fixture/config/bad_config'),
-			flags: {
-				verbose: true
-			},
-			log: log,
-			logger: new Logger.constructor()
-		});
-
-		return cliInstance.init().then(function() {
-			assert.isTrue(cliInstance.flags.verbose);
-			assert.notStartsWith(
-				log.args[0][0],
-				'Could not resolve any local config'
-			);
 		});
 	});
 });
