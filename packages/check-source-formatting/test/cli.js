@@ -14,7 +14,6 @@ var Promise = require('bluebird');
 var cli = require('../lib/cli');
 var File = require('../lib/file');
 var Logger = require('../lib/logger');
-var config = require('../lib/config/eslint');
 
 var getRule = require('./test_utils').getRule;
 

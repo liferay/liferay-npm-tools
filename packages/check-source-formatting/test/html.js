@@ -442,49 +442,6 @@ describe('Formatter.HTML', function() {
 			assert.equal(item, expected[index]);
 		});
 	});
-
-	// it(
-	// 	'should merge lint config properly',
-	// 	function() {
-	// 		var ESLINT_CONFIG = require('../lib/config/eslint');
-	// 		var ESLINT_CONFIG_JSP = require('../lib/config/eslint_jsp');
-
-	// 		var rules = _.reduce(
-	// 			ESLINT_CONFIG.rules,
-	// 			function(prev, item, index) {
-	// 				var ruleVal = item;
-
-	// 				if (_.isArray(ruleVal)) {
-	// 					ruleVal = ruleVal[0];
-	// 				}
-
-	// 				var jspRuleVal = ESLINT_CONFIG_JSP.rules[index];
-
-	// 				if (_.isArray(jspRuleVal)) {
-	// 					jspRuleVal = jspRuleVal[0];
-	// 				}
-
-	// 				if (ruleVal > 0 && jspRuleVal === 0) {
-	// 					prev.push(index);
-	// 				}
-
-	// 				return prev;
-	// 			},
-	// 			[]
-	// 		);
-
-	// 		var results = _.find(
-	// 			htmlErrors,
-	// 			function(item) {
-	// 				var type = item.type;
-
-	// 				return rules.indexOf(type) > -1;
-	// 			}
-	// 		);
-
-	// 		console.log(results, rules);
-	// 	}
-	// );
 });
 
 describe('Formatter.HTML Excludes', function() {

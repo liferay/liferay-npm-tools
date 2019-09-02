@@ -246,11 +246,8 @@ Formatter.HTML = Formatter.create({
 
 			jsFormatter._config = this._config;
 
-			var esLintConfig = require('./config/eslint_jsp');
-
 			var lint = _.merge(
 				{},
-				esLintConfig,
 				this.config('js.lint'),
 				this.config('html.lint.js')
 			);
