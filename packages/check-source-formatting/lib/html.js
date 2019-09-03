@@ -573,30 +573,31 @@ Formatter.HTML = Formatter.create({
 			// remaining scriptlet blocks until we get to %>
 
 			while ((match = scriptBlockRe.exec(contents))) {
-				contents = this._jsFindScriptletClose(contents, match.index);
-			}
+				contents = ((contents, matchIndex) => {
+					for (var i = matchIndex; i < contents.length; i++) {
+						var item = contents.charAt(i);
 
-			return contents;
-		},
+						if (
+							this._jsIsScriptletCloseToken(
+								item,
+								contents.charAt(i - 1)
+							)
+						) {
+							var block = contents.substring(matchIndex, i + 1);
 
-		_jsFindScriptletClose(contents, matchIndex) {
-			for (var i = matchIndex; i < contents.length; i++) {
-				var item = contents.charAt(i);
+							contents = contents.replace(
+								block,
+								this._getScriptletBlockReplacement(
+									block.split(REGEX.NEWLINE).length
+								)
+							);
 
-				if (
-					this._jsIsScriptletCloseToken(item, contents.charAt(i - 1))
-				) {
-					var block = contents.substring(matchIndex, i + 1);
+							break;
+						}
+					}
 
-					contents = contents.replace(
-						block,
-						this._getScriptletBlockReplacement(
-							block.split(REGEX.NEWLINE).length
-						)
-					);
-
-					break;
-				}
+					return contents;
+				})(contents, match.index);
 			}
 
 			return contents;
