@@ -749,7 +749,47 @@ Formatter.HTML = Formatter.create({
 				.replace(/<\/?[A-Za-z0-9-_]+:[^>]+>/g, '/* jsp tag */');
 
 			if (rescanBlocks.length) {
-				contents = instance._jsFindScriptletBlock(contents);
+				contents = (contents => {
+					var scriptBlockRe = /<%/g;
+					var match;
+
+					// We didn't find the closing %>, so let's iterate
+					// over all of the characters from the start of the
+					// remaining scriptlet blocks until we get to %>
+
+					while ((match = scriptBlockRe.exec(contents))) {
+						contents = ((contents, matchIndex) => {
+							for (var i = matchIndex; i < contents.length; i++) {
+								var item = contents.charAt(i);
+
+								if (
+									this._jsIsScriptletCloseToken(
+										item,
+										contents.charAt(i - 1)
+									)
+								) {
+									var block = contents.substring(
+										matchIndex,
+										i + 1
+									);
+
+									contents = contents.replace(
+										block,
+										this._getScriptletBlockReplacement(
+											block.split(REGEX.NEWLINE).length
+										)
+									);
+
+									break;
+								}
+							}
+
+							return contents;
+						})(contents, match.index);
+					}
+
+					return contents;
+				})(contents);
 			}
 
 			scriptBlock.contents = contents;
