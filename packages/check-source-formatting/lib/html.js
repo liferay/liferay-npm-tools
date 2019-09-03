@@ -95,56 +95,6 @@ Formatter.HTML = Formatter.create({
 			return styleBlocks;
 		},
 
-		extractJs(contents) {
-			var filePath = this.file;
-
-			var scriptBlocks = [];
-
-			var hasJs = REGEX.AUI_SCRIPT.test(contents);
-
-			if (hasJs) {
-				var reAUIScriptGlobal = new RegExp(
-					REGEX.AUI_SCRIPT.source,
-					'g'
-				);
-
-				var newContents = contents
-					.replace(REGEX_JSP_SCRIPT_BLOCK, jspLintStubs.scriptlet)
-					.replace(
-						REGEX_JSP_SCRIPTLET_BLOCK,
-						jspLintStubs.echoScriptlet
-					)
-					.replace(
-						REGEX_JSP_PORTLET_NAMESPACE,
-						jspLintStubs.namespace
-					);
-
-				newContents.replace(
-					reAUIScriptGlobal,
-					(m, tagNamespace, scriptAttrs, body, index) => {
-						if (!body) {
-							return;
-						}
-
-						var lines = newContents
-							.substring(0, index)
-							.split(REGEX.NEWLINE).length;
-
-						scriptBlocks.push({
-							contents: body,
-							file: filePath,
-							match: m,
-							scriptAttrs,
-							startLine: lines,
-							tagNamespace
-						});
-					}
-				);
-			}
-
-			return scriptBlocks;
-		},
-
 		format(contents) {
 			var instance = this;
 
