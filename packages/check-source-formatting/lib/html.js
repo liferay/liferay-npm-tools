@@ -283,7 +283,6 @@ Formatter.HTML = Formatter.create({
 			styleBlocks = styleBlocks.map((item, index) => {
 				item = instance._jsRemoveScriptletBlocks(item);
 				item = instance._jsHandleScriptletWhitespace(item);
-				item = instance._jsPadLines(item, token);
 
 				var contents = item.contents;
 
@@ -712,14 +711,6 @@ Formatter.HTML = Formatter.create({
 			);
 
 			return item;
-		},
-
-		_jsPadLines(scriptBlock, token) {
-			var prefix = new Array(scriptBlock.startLine).join(`${token}\n`);
-
-			scriptBlock.contents = prefix + scriptBlock.contents;
-
-			return scriptBlock;
 		},
 
 		_jsRemoveScriptletBlocks(scriptBlock) {
