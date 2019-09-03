@@ -7,6 +7,9 @@
 	"jest": {
 		"testMatch": [
 			"**/test/**/*.js"
+		],
+		"testPathIgnorePatterns": [
+			"<rootDir>/packages/check-source-formatting/"
 		]
 	},
 	"private": true,
