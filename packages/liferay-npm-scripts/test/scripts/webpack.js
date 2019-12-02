@@ -31,31 +31,51 @@ describe('scripts/webpack.js', () => {
 
 	it('invokes webpack', () => {
 		webpack();
-		expect(spawnSync).toHaveBeenCalledWith('webpack', []);
+
+		expect(spawnSync.mock.calls).toHaveLength(1);
+		expect(spawnSync.mock.calls[0]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][0]).toBe('webpack');
+		expect(spawnSync.mock.calls[0][1]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][1][0]).toBe('--config');
+		expect(spawnSync.mock.calls[0][1][1]).toMatch(/webpack.config.js$/);
 	});
 
 	it('passes arguments to webpack', () => {
 		webpack('--verbose');
-		expect(spawnSync).toHaveBeenCalledWith('webpack', ['--verbose']);
+
+		expect(spawnSync.mock.calls).toHaveLength(1);
+		expect(spawnSync.mock.calls[0]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][0]).toBe('webpack');
+		expect(spawnSync.mock.calls[0][1]).toHaveLength(3);
+		expect(spawnSync.mock.calls[0][1][0]).toBe('--config');
+		expect(spawnSync.mock.calls[0][1][1]).toMatch(/webpack.config.js$/);
+		expect(spawnSync.mock.calls[0][1][2]).toMatch('--verbose');
 	});
 
 	it('executes wepback-dev-server when "--watch" is passed', () => {
 		process.chdir(FIXTURES);
+
 		webpack('--watch');
-		expect(spawnSync).toHaveBeenCalledWith('webpack-dev-server', [
-			'--config',
-			'webpack.config.dev.js'
-		]);
+
+		expect(spawnSync.mock.calls).toHaveLength(1);
+		expect(spawnSync.mock.calls[0]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][0]).toBe('webpack-dev-server');
+		expect(spawnSync.mock.calls[0][1]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][1][0]).toBe('--config');
+		expect(spawnSync.mock.calls[0][1][1]).toMatch(/webpack.config.dev.js$/);
 	});
 
 	it('passes arguments to wepback-dev-server', () => {
 		process.chdir(FIXTURES);
 		webpack('--watch', '--lazy');
-		expect(spawnSync).toHaveBeenCalledWith('webpack-dev-server', [
-			'--config',
-			'webpack.config.dev.js',
-			'--lazy'
-		]);
+
+		expect(spawnSync.mock.calls).toHaveLength(1);
+		expect(spawnSync.mock.calls[0]).toHaveLength(2);
+		expect(spawnSync.mock.calls[0][0]).toBe('webpack-dev-server');
+		expect(spawnSync.mock.calls[0][1]).toHaveLength(3);
+		expect(spawnSync.mock.calls[0][1][0]).toBe('--config');
+		expect(spawnSync.mock.calls[0][1][1]).toMatch(/webpack.config.dev.js$/);
+		expect(spawnSync.mock.calls[0][1][2]).toBe('--lazy');
 	});
 
 	it('complains when "--watch" is passed without appropriate config', () => {
