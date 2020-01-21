@@ -6,6 +6,7 @@
 
 const path = require('path');
 
+const getMergedConfig = require('../../utils/getMergedConfig');
 const getPaths = require('../../utils/getPaths');
 const log = require('../../utils/log');
 const {SpawnError} = require('../../utils/spawnSync');
@@ -47,6 +48,11 @@ const DISALLOWED_CONFIG_FILE_NAMES = {
 
 /* eslint-enable sort-keys */
 
+// TODO: Actual rules still to be decided in:
+// https://github.com/liferay/liferay-frontend-guidelines/issues/78
+const SCSS_FILENAME_DESCRIPTION = 'lower-case kebab-case';
+const SCSS_REGEXP = /\/_?([a-z0-9]+-)*[a-z0-9]+\.scss$/;
+
 function preflight() {
 	const errors = [...checkConfigFileNames(), ...checkSourceFileNames()];
 
@@ -83,7 +89,17 @@ function checkConfigFileNames() {
  * Returns a (possibly empty) array of error messages.
  */
 function checkSourceFileNames() {
-	return [];
+	const globs = getMergedConfig('npmscripts', 'check');
+
+	const sourceFiles = getPaths(globs, ['.scss']);
+
+	return sourceFiles
+		.filter(file => {
+			return !SCSS_REGEXP.test(file);
+		})
+		.map(file => {
+			return `${file}: BAD - name should be ${SCSS_FILENAME_DESCRIPTION}`;
+		});
 }
 
 module.exports = preflight;
