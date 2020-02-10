@@ -269,6 +269,10 @@
 	"output": "build/node/packageRunBuild/resources",
 	"rules": [
 		{
+			"test": "\\.css$",
+			"use": ["style-loader"]
+		},
+		{
 			"test": "\\.scss$",
 			"exclude": "node_modules",
 			"use": [
