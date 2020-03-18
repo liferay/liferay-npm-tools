@@ -94,6 +94,18 @@ const ThemeDisplay = {
 	getDoAsUserIdEncoded: jest.fn(() => 'default-mocked-do-as-user-id'),
 
 	/**
+	 * https://github.com/liferay/liferay-portal/blob/31073fb75fb0d3b309f9e0f921cb7a469aa2703d/portal-web/docroot/html/common/themes/top_js.jspf#L164
+	 */
+	getLayoutRelativeControlPanelURL: jest.fn(
+		() => 'layoutRelativeControlPanelURL'
+	),
+
+	/**
+	 * https://github.com/liferay/liferay-portal/blob/31073fb75fb0d3b309f9e0f921cb7a469aa2703d/portal-web/docroot/html/common/themes/top_js.jspf#L168
+	 */
+	getLayoutRelativeURL: jest.fn(() => 'layoutRelativeURL'),
+
+	/**
 	 * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/portal-web/docroot/html/common/themes/top_js.jspf#L220
 	 */
 	getLanguageId: jest.fn(() => 'en-US'),
@@ -117,6 +129,11 @@ const ThemeDisplay = {
 	 * https://github.com/liferay/liferay-portal/blob/31073fb75fb0d3b309f9e0f921cb7a469aa2703d/portal-web/docroot/html/common/themes/top_js.jspf#L247
 	 */
 	getPortalURL: jest.fn(() => 'http://localhost:8080'),
+
+	/**
+	 * https://github.com/liferay/liferay-portal/blob/31073fb75fb0d3b309f9e0f921cb7a469aa2703d/portal-web/docroot/html/common/themes/top_js.jspf#L250
+	 */
+	getScopeGroupId: jest.fn(() => 'scopeGroupId'),
 };
 
 /**
