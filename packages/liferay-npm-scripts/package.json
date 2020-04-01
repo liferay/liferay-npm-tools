@@ -56,7 +56,7 @@
 		"liferay-npm-bundler-preset-liferay-dev": "4.3.0",
 		"liferay-theme-tasks": "9.4.3",
 		"metal-tools-soy": "4.3.2",
-		"minimist": "^1.2.0",
+		"minimist": "^1.2.2",
 		"prettier": "1.19.1",
 		"react": "*",
 		"react-dom": "*",
