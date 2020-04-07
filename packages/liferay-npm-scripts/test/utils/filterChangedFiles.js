@@ -64,7 +64,7 @@ describe('filterChangedFiles()', () => {
 		fs.writeFileSync(privatePkg, 'liferay-npm-scripts: 1\n', 'utf8');
 
 		git('add', 'a', 'modules');
-		git('commit', '-m', 'a', 'a', 'modules');
+		git('commit', '-m', 'a', '--', 'a', 'modules');
 		git('tag', 'a');
 		git('commit', '-m', 'b', '--allow-empty');
 		git('tag', 'b');
@@ -75,17 +75,17 @@ describe('filterChangedFiles()', () => {
 			flag: 'a',
 		});
 
-		git('commit', '-m', 'c', 'a');
+		git('commit', '-m', 'c', '--', 'a');
 		git('tag', 'c');
 
 		fs.writeFileSync(pkg, 'extra: 1\n', {encoding: 'utf8', flag: 'a'});
 
-		git('commit', '-m', 'd', pkg);
+		git('commit', '-m', 'd', '--', pkg);
 		git('tag', 'd');
 
 		fs.writeFileSync(pkg, 'liferay-npm-scripts: 2\nextra: 1\n', 'utf8');
 
-		git('commit', '-m', 'e', pkg);
+		git('commit', '-m', 'e', '--', pkg);
 		git('tag', 'e');
 		git('commit', '-m', 'f', '--allow-empty');
 		git('tag', 'f');
@@ -94,13 +94,13 @@ describe('filterChangedFiles()', () => {
 		fs.writeFileSync(pkg, 'liferay-npm-scripts: 2\n', 'utf8');
 		fs.writeFileSync(privatePkg, 'liferay-npm-scripts: 2\n', 'utf8');
 
-		git('commit', '-m', 'g', 'modules');
+		git('commit', '-m', 'g', '--', 'modules');
 		git('tag', 'g');
 		git('checkout', '-b', 'topic-2');
 
 		fs.writeFileSync('a', 'more stuff\n', {encoding: 'utf8', flag: 'a'});
 
-		git('commit', '-m', 'h', 'a');
+		git('commit', '-m', 'h', '--', 'a');
 		git('tag', 'h');
 
 		fs.writeFileSync(privatePkg, 'extra: 1\n', {
@@ -108,7 +108,7 @@ describe('filterChangedFiles()', () => {
 			flag: 'a',
 		});
 
-		git('commit', '-m', 'i', privatePkg);
+		git('commit', '-m', 'i', '--', privatePkg);
 		git('tag', 'i');
 
 		fs.writeFileSync(
@@ -117,7 +117,7 @@ describe('filterChangedFiles()', () => {
 			'utf8'
 		);
 
-		git('commit', '-m', 'j', privatePkg);
+		git('commit', '-m', 'j', '--', privatePkg);
 		git('tag', 'j');
 		git('commit', '-m', 'k', '--allow-empty');
 		git('tag', 'k');
