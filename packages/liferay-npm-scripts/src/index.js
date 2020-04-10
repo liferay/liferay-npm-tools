@@ -55,6 +55,10 @@ module.exports = async function() {
 			require('./scripts/format')({check: true});
 		},
 
+		async lighthouse() {
+			await require('./scripts/lighthouse')();
+		},
+
 		async lint() {
 			await require('./scripts/lint')();
 		},
