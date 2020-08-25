@@ -6,6 +6,45 @@
 const getMergedConfig = require('./getMergedConfig');
 
 const BABEL_CONFIG = getMergedConfig('babel');
+const NPM_SCRIPTS_CONFIG = getMergedConfig('npmscripts');
+
+function updateWebpackRules(baseConfig, babelConfig) {
+	const clonedConfig = {...baseConfig};
+
+	clonedConfig.module = {
+		...clonedConfig.module,
+		rules: clonedConfig.module.rules.map((rule) => {
+			let {use} = rule;
+
+			if (!use) {
+				return rule;
+			}
+
+			if (!Array.isArray(use)) {
+				use = [use];
+			}
+
+			return {
+				...rule,
+				use: use.map((useEntry, i) => {
+					if (typeof useEntry === 'string') {
+						return {
+							loader: useEntry,
+							options: {...babelConfig},
+						};
+					} else {
+						return {
+							...useEntry,
+							options: {...babelConfig, ...useEntry.options},
+						};
+					}
+				}),
+			};
+		}),
+	};
+
+	return clonedConfig;
+}
 
 /**
  * Modify all babel-loader options so that they include our defaults.
@@ -22,28 +61,53 @@ function mergeBabelLoaderOptions(webpackConfig) {
 		return webpackConfig;
 	}
 
-	webpackConfig.module.rules.forEach((rule) => {
-		let {use} = rule;
+	if (NPM_SCRIPTS_CONFIG.dualBuild) {
+		const modernBabelConfig = {
+			...BABEL_CONFIG,
+			presets: BABEL_CONFIG.presets.map((preset) => {
+				if (
+					preset === '@babel/preset-env' ||
+					preset[0] === '@babel/preset-env'
+				) {
+					return [
+						'@babel/preset-env',
+						{
+							targets: {
+								browsers: [
+									'Edge >= 16',
+									'Firefox >= 60',
+									'Chrome >= 61',
+									'Safari >= 11',
+									'Opera >= 48',
+								],
+							},
+						},
+					];
+				}
 
-		if (!use) {
-			return;
-		}
+				return preset;
+			}),
+		};
 
-		if (!Array.isArray(use)) {
-			use = [use];
-		}
+		const baseConfig = updateWebpackRules(webpackConfig, BABEL_CONFIG);
+		const modernConfig = updateWebpackRules(
+			webpackConfig,
+			modernBabelConfig
+		);
 
-		use.forEach((useEntry, i) => {
-			if (typeof useEntry === 'string') {
-				use[i] = {
-					loader: useEntry,
-					options: {...BABEL_CONFIG},
-				};
-			} else {
-				use[i].options = {...BABEL_CONFIG, ...useEntry.options};
-			}
-		});
-	});
+		webpackConfig = [
+			baseConfig,
+			{
+				...modernConfig,
+				output: {
+					...modernConfig.output,
+					filename: `${modernConfig.output.filename}_modern`,
+				},
+			},
+		];
+	} else {
+		webpackConfig = updateWebpackRules(webpackConfig, BABEL_CONFIG);
+	}
 
 	return webpackConfig;
 }

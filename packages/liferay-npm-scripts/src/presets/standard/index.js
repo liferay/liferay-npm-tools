@@ -40,6 +40,7 @@ module.exports = {
 		temp: 'build/npmscripts',
 	},
 	check: CHECK_AND_FIX_GLOBS,
+	dualBuild: false,
 	fix: CHECK_AND_FIX_GLOBS,
 	rules: {
 		'blacklisted-dependency-patterns': ['^liferay-npm-bundler-loader-.+'],
