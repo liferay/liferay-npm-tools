@@ -65,7 +65,7 @@
 		"prettier": "2.0.5",
 		"react": "*",
 		"react-dom": "*",
-		"regenerator-runtime": "0.13.3",
+		"regenerator-runtime": "0.13.7",
 		"resolve": "^1.14.2",
 		"rimraf": "^3.0.2",
 		"sass-loader": "^8.0.2",
