@@ -1,3 +1,7 @@
+> :warning: [The `liferay-npm-bundler-preset-liferay-dev` package](https://npmjs.com/package/liferay-npm-bundler-preset-liferay-dev) will be deprecated and this repo archived (ie. switched to read-only mode). Development will continue in [the `@liferay/npm-bundler-preset-liferay-dev` package](https://npmjs.com/package/@liferay/npm-bundler-preset-liferay-dev) and [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools/npm-bundler-preset-liferay-dev).
+
+---
+
 # liferay-npm-bundler-preset-liferay-dev
 
 > Liferay NPM Bundler preset for npm modules inside liferay-portal.

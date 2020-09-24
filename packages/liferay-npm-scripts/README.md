@@ -1,3 +1,7 @@
+> :warning: [The `liferay-npm-scripts` package](https://npmjs.com/package/liferay-npm-scripts) will be deprecated and this repo archived (ie. switched to read-only mode). Development will continue in [the `@liferay/npm-scripts` package](https://npmjs.com/package/@liferay/npm-scripts) and [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools/npm-scripts).
+
+---
+
 # liferay-npm-scripts
 
 ## Usage

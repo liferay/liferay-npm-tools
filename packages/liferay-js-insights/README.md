@@ -1,3 +1,7 @@
+> :warning: [The `liferay-js-insights` package](https://npmjs.com/package/liferay-js-insights) will be deprecated and this repo archived (ie. switched to read-only mode). Development will continue in [the `@liferay/js-insights` package](https://npmjs.com/package/@liferay/js-insights) and [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools/js-insights).
+
+---
+
 # liferay-js-insights
 
 > A simple dependency analysis reporter. It scans ES6 modules for imports and generate a report on used external packages.
