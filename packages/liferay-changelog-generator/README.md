@@ -1,3 +1,7 @@
+> :warning: [The `liferay-changelog-generator` package](https://npmjs.com/package/liferay-changelog-generator) will be deprecated and this repo archived (ie. switched to read-only mode). Development will continue in [the `@liferay/changelog-generator` package](https://npmjs.com/package/@liferay/changelog-generator) and [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools/changelog-generator).
+
+---
+
 # liferay-changelog-generator
 
 > A crude and unsophisticated script for generating or updating CHANGELOG.md based on the local Git history. It was born out of [frustration with other tools](https://github.com/liferay/liferay-js-themes-toolkit/issues/221) that were limited by GitHub API throttling or unable to cope with repos with multiple active branches.

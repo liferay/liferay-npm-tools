@@ -1,3 +1,7 @@
+> :warning: [The `liferay-js-publish` package](https://npmjs.com/package/liferay-js-publish) will be deprecated and this repo archived (ie. switched to read-only mode). Development will continue in [the `@liferay/js-publish` package](https://npmjs.com/package/@liferay/js-publish) and [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools/js-publish).
+
+---
+
 # liferay-js-publish
 
 > A script for publishing an NPM package via `yarn version`.

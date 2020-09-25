@@ -1,3 +1,7 @@
+> :warning: The packages in this repo will be deprecated and the repo archived (ie. switched to read-only mode). Development will continue [in `liferay/liferay-frontend-projects` monorepo](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/npm-tools).
+
+---
+
 # liferay-npm-tools
 
 ## Setup
